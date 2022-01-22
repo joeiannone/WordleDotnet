@@ -1,0 +1,59 @@
+﻿<Page x:Class="WordleWPFClient.GamePage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:WordleWPFClient"
+      mc:Ignorable="d" 
+      d:DesignHeight="680" d:DesignWidth="520"
+      Title="GamePage">
+
+    <Grid Name="MainGrid"
+          Width="300"
+          Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label x:Name="WordleLabel" 
+               Content="Wordle"
+               FontSize="24"
+               HorizontalAlignment="Center"/>
+        <TextBlock Grid.Row="1"><Hyperlink NavigateUri="UserAnalyticsPage.xaml">Analytics</Hyperlink></TextBlock>
+        <Button Content="Replay"
+                Margin="5, 10"
+                Padding="5"
+                HorizontalAlignment="Right"
+                Grid.Row="2"
+                Background="White"
+                Foreground="DodgerBlue"
+                FontSize="12"
+                BorderThickness="0"
+                Click="ReplayButton_Click"/>
+        <TextBlock x:Name="UserMessageTextBlock" 
+                   Text=""
+                   FontSize="14"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                   Grid.Row="3"
+                   MinHeight="60"/>
+        <StackPanel x:Name="WordleGamePanel"
+                    Grid.Row="4"></StackPanel>
+        <Button Content="Enter"
+                Margin="5, 10"
+                Padding="5"
+                HorizontalAlignment="Right"
+                Grid.Row="5"
+                Background="DodgerBlue"
+                Foreground="White"
+                FontSize="18"
+                Click="SubmitButton_Click"/>
+    </Grid>
+</Page>

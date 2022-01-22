@@ -1,0 +1,6 @@
+﻿- Grid (5x6) of text inputs that take 1 char each
+- text inputs must be entered in order
+- enter button (assuming valid answer) advances selection to next row
+- need to maintain game state in memory
+
+- research resources and json data 
