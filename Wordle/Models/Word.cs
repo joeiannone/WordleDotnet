@@ -2,7 +2,7 @@
 
 namespace Wordle.Models
 {
-    class Word
+    public class Word
     {
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }

@@ -11,6 +11,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using WordleWPFClient.Classes;
 using WordleWPFClient;
+using Wordle;
 
 namespace WordleWPFClient
 {
@@ -26,10 +27,14 @@ namespace WordleWPFClient
         private Grid WordleGameGrid = new Grid();
         private Letter[][] wordleLetters = new Letter[wordleRowsMax][];
         private Dictionary<string, int[]> wordleLettersReference = new Dictionary<string, int[]>();
-        private Game game;
+        private WordleWPFClient.Classes.Game game;
+        private string wordleRows;
 
         public GamePage()
         {
+            // this is a test
+            //Wordle.Game wordlegametest = new Wordle.Game(App.WordsDbPath);
+
             InitializeComponent();
             newGame();
         }
@@ -45,7 +50,7 @@ namespace WordleWPFClient
             wordleLetters = new Letter[wordleRowsMax][];
             wordleLettersReference = new Dictionary<string, int[]>();
 
-            game = new Game(GetRandomWord(), wordleRowsMax);
+            game = new Classes.Game(GetRandomWord(), wordleRowsMax);
             BuildWordleGrid();
             //WordleLabel.Content = game.secretWord;
         }
