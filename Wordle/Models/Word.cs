@@ -35,7 +35,7 @@ namespace Wordle.Models
 
         public static Word CreateWord(string wordStr)
         {
-            return new Word {
+            return new Word() {
                 WordStr = wordStr,
                 Length = wordStr.Length,
                 Letters = wordStr.ToCharArray(),
