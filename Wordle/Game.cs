@@ -15,8 +15,8 @@ namespace Wordle
         public string DBConnectionString;
         public const int COLUMNS = 5;
         public int Rows;
-        public List<char> lettersFound;
-        public List<char> lettersRemaining;
+        private List<char> lettersFound;
+        private List<char> lettersRemaining;
         public int CurrentRowPosition { get; set; }
         public Word CurrentSecretWord { get; set; }
 
@@ -30,8 +30,15 @@ namespace Wordle
         {
             Rows = rows;
             lettersFound = new List<char>();
-            CurrentSecretWord = Word.CreateWord(GenerateRandomWord());
-            lettersRemaining = new List<char>(CurrentSecretWord.Letters);
+
+            try { 
+                CurrentSecretWord = Word.CreateWord(GenerateRandomWord());
+                lettersRemaining = new List<char>(CurrentSecretWord.Letters);
+            } catch (NullReferenceException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+           
         }
 
         public Word Guess(string wordStr)
