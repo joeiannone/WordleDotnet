@@ -3,8 +3,6 @@
 using AppKit;
 using Foundation;
 
-using Wordle;
-
 namespace WordleMacClient
 {
     public partial class ViewController : NSViewController
