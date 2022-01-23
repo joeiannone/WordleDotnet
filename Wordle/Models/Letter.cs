@@ -9,6 +9,7 @@ namespace Wordle.Models
         private char letterStr;
         public int wordPos;
 
+
         public Letter(char letterStr, int wordPos)
         {
             this.letterStr = letterStr;

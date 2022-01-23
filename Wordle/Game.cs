@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using Wordle.Models;
+using static Wordle.Models.Word;
 
 namespace Wordle
 {
@@ -14,12 +15,10 @@ namespace Wordle
         public string DBConnectionString;
         public const int COLUMNS = 5;
         public int Rows;
-        //public Dictionary<HashCode, Word> CurrentWordStates;
         public List<char> lettersFound;
         public List<char> lettersRemaining;
-        private int CurrentRowPosition { get; set; }
-        private Word CurrentSecretWord { get; set; }
-
+        public int CurrentRowPosition { get; set; }
+        public Word CurrentSecretWord { get; set; }
 
         public Game(string dbConnectionString, int rows = 6)
         {
@@ -30,7 +29,6 @@ namespace Wordle
         private void Init(int rows = 6)
         {
             Rows = rows;
-            //CurrentWordStates = new Dictionary<HashCode, Word>();
             lettersFound = new List<char>();
             CurrentSecretWord = Word.CreateWord(GenerateRandomWord());
             lettersRemaining = new List<char>(CurrentSecretWord.Letters);
@@ -52,22 +50,36 @@ namespace Wordle
 
             Word guess = Word.CreateWord(wordStr);
 
+
             // determine what letters have been found and update lists
-            foreach (char c in guess.Letters)
+            for (int i = 0; i < guess.Letters.Length; i++)
             {
-                if (lettersRemaining.Contains(c))
+                char letter = guess.Letters[i];
+
+                string letterKey = $"{CurrentRowPosition}{i}";
+
+                Console.WriteLine(letterKey);
+                if (new List<char>(CurrentSecretWord.Letters).Contains(letter))
                 {
-                    if (Array.IndexOf(guess.Letters, c) == Array.IndexOf(CurrentSecretWord.Letters, c))
+                    if (i == Array.IndexOf(CurrentSecretWord.Letters, letter))
                     {
-                        lettersFound.Add(c);
-                        lettersRemaining.Remove(c);
+                        lettersFound.Add(letter);
+                        lettersRemaining.Remove(letter);
+                        guess.LetterStates.Add(letterKey, LetterState.isCorrect);
+                    } else
+                    {
+                        if (lettersRemaining.Contains(letter))
+                            guess.LetterStates.Add(letterKey, LetterState.inWord);
+                        else
+                            guess.LetterStates.Add(letterKey, LetterState.notInWord);
                     }
                 }
+                else
+                {
+                    guess.LetterStates.Add(letterKey, LetterState.notInWord);
+                }
             }
-
-            // TODO: figure out letter states for this guess
-
-
+            
             return guess;
         }
 
@@ -81,7 +93,7 @@ namespace Wordle
                 Random rand = new Random();
 
                 int maxId = connection.Table<Word>().Count();
-                int randomIndex = rand.Next(maxId);
+                int randomIndex = rand.Next(1, maxId);
 
                 List<Word> randomWords = connection.Table<Word>().Where(x => x.Id.Equals(randomIndex)).ToList();
                 randomWord = randomWords[0];
@@ -91,7 +103,7 @@ namespace Wordle
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            
         }
     }
 }
