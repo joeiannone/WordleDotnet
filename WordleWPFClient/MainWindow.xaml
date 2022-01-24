@@ -76,7 +76,7 @@
             <TabItem Header="Play2" Visibility="Hidden">
                 <Frame Source="GamePage2.xaml"/>
             </TabItem>
-            <TabItem Header="Analytics"  Visibility="Hidden">
+            <TabItem Name="AnalyticsTabItem" Header="Analytics"  Visibility="Hidden">
                 <Frame Source="UserAnalyticsPage.xaml"
                        Grid.Row="2"
                        Grid.ColumnSpan="5"/>
