@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Wordle;
+using Wordle.Models;
 using NUnit.Framework;
 
 namespace WordleTests
@@ -7,7 +9,7 @@ namespace WordleTests
     [TestFixture]
     public class GameUnitTest
     {
-        private Game _game;
+        private Game game;
 
         [SetUp]
         public void SetUp()
@@ -17,14 +19,24 @@ namespace WordleTests
             string DBPath = System.IO.Path.Combine(AppDataFolderPath, "Wordle.db");
             System.IO.Directory.CreateDirectory(AppDataFolderPath);
 
-            _game = new Game(DBPath);
+            game = new Game(DBPath);
+            
         }
 
         [Test]
         public void TestGuess()
         {
-            // TODO
-            Assert.AreEqual(true, true);
+            game.CurrentSecretWord = Word.CreateWord("chair");
+            
+            Word guess = game.Guess("couch");
+            Dictionary<string, Word.LetterState> correctState = new Dictionary<string, Word.LetterState>();
+            correctState.Add("00", Word.LetterState.isCorrect);
+            correctState.Add("01", Word.LetterState.notInWord);
+            correctState.Add("02", Word.LetterState.notInWord);
+            correctState.Add("03", Word.LetterState.notInWord);
+            correctState.Add("04", Word.LetterState.inWord);
+            Assert.AreEqual(correctState, guess.LetterStates);
+            
         }
     }
 }

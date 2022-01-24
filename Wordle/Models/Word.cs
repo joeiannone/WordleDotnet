@@ -33,6 +33,16 @@ namespace Wordle.Models
             return WordStr;
         }
 
+        public string LetterStatesToString()
+        {
+            string letterStatesStr = "";
+            foreach (KeyValuePair<string, LetterState> letter in LetterStates)
+            {
+               letterStatesStr += $"{letter.Key}, {letter.Value}\n";
+            }
+            return letterStatesStr;
+        }
+
         public static Word CreateWord(string wordStr)
         {
             return new Word() {

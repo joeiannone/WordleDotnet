@@ -65,7 +65,6 @@ namespace Wordle
 
                 string letterKey = $"{CurrentRowPosition}{i}";
 
-                Console.WriteLine(letterKey);
                 if (new List<char>(CurrentSecretWord.Letters).Contains(letter))
                 {
                     if (i == Array.IndexOf(CurrentSecretWord.Letters, letter))
