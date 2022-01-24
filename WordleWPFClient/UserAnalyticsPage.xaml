@@ -8,10 +8,9 @@
       d:DesignHeight="450" d:DesignWidth="800"
       Title="Page1">
 
-    <Grid Margin="20">
+    <Grid Margin="10">
         <StackPanel>
             <TextBlock Text="User Analytics"/>
-            <TextBlock Grid.Row="1"><Hyperlink NavigateUri="GamePage.xaml">Play</Hyperlink></TextBlock>
         </StackPanel>
     </Grid>
 </Page>

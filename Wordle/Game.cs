@@ -11,14 +11,21 @@ namespace Wordle
      */
     public class Game : IDisposable
     {
-
+        /**
+         * 
+         * 
+         */
         public string DBConnectionString;
         public const int COLUMNS = 5;
         public int Rows;
         private List<char> lettersFound;
         private List<char> lettersRemaining;
+
+        // this gets changed inside Guess method
+        public bool wordFound = false;
         public int CurrentRowPosition { get; set; }
         public Word CurrentSecretWord { get; set; }
+
 
         public Game(string dbConnectionString, int rows = 6)
         {
@@ -26,37 +33,44 @@ namespace Wordle
             Init(rows);
         }
 
+        /**
+         * 
+         * 
+         */
         private void Init(int rows = 6)
         {
             Rows = rows;
             lettersFound = new List<char>();
-
-            try { 
-                CurrentSecretWord = Word.CreateWord(GenerateRandomWord());
-                lettersRemaining = new List<char>(CurrentSecretWord.Letters);
-            } catch (NullReferenceException ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            CurrentSecretWord = Word.CreateWord(GenerateRandomWord());
            
         }
 
+        /**
+         * 
+         */
+        public void IncrementRowPosition()
+        {
+            if (CurrentRowPosition < (Rows - 1) && !wordFound)
+            {
+                CurrentRowPosition++;
+            }
+        }
+
+        /**
+         * 
+         * 
+         */
         public Word Guess(string wordStr)
         {
-            //TODO
-            /**
-             * Possible states of each letter
-             * All gray to sdtart
-             * 
-             * GReen if:
-             *  - in word and correct position
-             * Yellow if:
-             *  - in word but not in correct position and not already green (at any point) - unless the same letter exists somewhere else in the word
-             *  
-             */
-
             Word guess = Word.CreateWord(wordStr);
 
+            lettersRemaining = new List<char>(CurrentSecretWord.Letters);
+
+            // before doing anything check for an exact match
+            if (guess.ToString() == CurrentSecretWord.ToString())
+            {
+                wordFound = true;
+            }
 
             // determine what letters have been found and update lists
             for (int i = 0; i < guess.Letters.Length; i++)
@@ -85,11 +99,18 @@ namespace Wordle
                     guess.LetterStates.Add(letterKey, LetterState.notInWord);
                 }
             }
-            
+
+
+            lettersFound.Clear();
+            lettersRemaining.Clear();
+
             return guess;
         }
 
-
+        /**
+         * 
+         * 
+         */
         private string GenerateRandomWord()
         {
             Word randomWord;
@@ -107,6 +128,9 @@ namespace Wordle
             return randomWord.WordStr;
         }
 
+        /**
+         * 
+         */
         public void Dispose()
         {
             

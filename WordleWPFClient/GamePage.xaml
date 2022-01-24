@@ -9,8 +9,7 @@
       Title="GamePage">
 
     <Grid Name="MainGrid"
-          Width="300"
-          Margin="10">
+          Width="300">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
@@ -22,11 +21,6 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Label x:Name="WordleLabel" 
-               Content="Wordle"
-               FontSize="24"
-               HorizontalAlignment="Center"/>
-        <TextBlock Grid.Row="1"><Hyperlink NavigateUri="UserAnalyticsPage.xaml">Analytics</Hyperlink></TextBlock>
         <Button Content="Replay"
                 Margin="5, 10"
                 Padding="5"

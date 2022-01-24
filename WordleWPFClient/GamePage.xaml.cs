@@ -63,7 +63,7 @@ namespace WordleWPFClient
             {
                 Random rand = new Random();
                 int maxId = connection.Table<Models.Word>().Count();
-                int randomIndex = rand.Next(maxId);
+                int randomIndex = rand.Next(1, maxId);
 
                 List<Models.Word> randomWords = connection.Table<Models.Word>().Where(x => x.Id.Equals(randomIndex)).ToList<Models.Word>();
                 randomWord = randomWords[0];
