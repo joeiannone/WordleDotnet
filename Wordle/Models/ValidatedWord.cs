@@ -6,7 +6,7 @@ namespace Wordle.Models
 {
     public class ValidatedWord : Word
     {
-        public Boolean IsValid { get; set;  }
+        public readonly Boolean IsValid = true;
 
     }
 }
