@@ -46,7 +46,7 @@ namespace Wordle.Models
         public static Word CreateWord(string wordStr)
         {
             return new Word() {
-                WordStr = wordStr,
+                WordStr = wordStr.ToLower().Trim(),
                 Length = wordStr.Length,
                 Letters = wordStr.ToCharArray(),
                 LetterStates = new Dictionary<string, LetterState>()

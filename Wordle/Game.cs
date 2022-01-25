@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using Wordle.Models;
-using static Wordle.Models.Word;
 
 namespace Wordle
 {
@@ -29,7 +28,7 @@ namespace Wordle
 
         public Game(string dbConnectionString, int rows = 6)
         {
-            this.DBConnectionString = dbConnectionString; 
+            DBConnectionString = dbConnectionString;
             Init(rows);
         }
 
@@ -42,7 +41,6 @@ namespace Wordle
             Rows = rows;
             lettersFound = new List<char>();
             CurrentSecretWord = Word.CreateWord(GenerateRandomWord());
-           
         }
 
         /**
@@ -57,12 +55,15 @@ namespace Wordle
         }
 
         /**
-         * TODO: Updated this to only accept validated word
+         * 
          * 
          */
-        public Word Guess(string wordStr)
+        public ValidatedWord Guess(ValidatedWord guess)
         {
-            Word guess = Word.CreateWord(wordStr);
+            if (!guess.IsValid)
+            {
+                return guess;
+            }
 
             lettersRemaining = new List<char>(CurrentSecretWord.Letters);
 
@@ -85,18 +86,18 @@ namespace Wordle
                     {
                         lettersFound.Add(letter);
                         lettersRemaining.Remove(letter);
-                        guess.LetterStates.Add(letterKey, LetterState.isCorrect);
+                        guess.LetterStates.Add(letterKey, Word.LetterState.isCorrect);
                     } else
                     {
                         if (lettersRemaining.Contains(letter))
-                            guess.LetterStates.Add(letterKey, LetterState.inWord);
+                            guess.LetterStates.Add(letterKey, Word.LetterState.inWord);
                         else
-                            guess.LetterStates.Add(letterKey, LetterState.notInWord);
+                            guess.LetterStates.Add(letterKey, Word.LetterState.notInWord);
                     }
                 }
                 else
                 {
-                    guess.LetterStates.Add(letterKey, LetterState.notInWord);
+                    guess.LetterStates.Add(letterKey, Word.LetterState.notInWord);
                 }
             }
 
@@ -111,19 +112,17 @@ namespace Wordle
          * 
          * 
          */
-        private string GenerateRandomWord()
+        public string GenerateRandomWord()
         {
             Word randomWord;
 
             using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
             {
                 Random rand = new Random();
-
                 int maxId = connection.Table<Word>().Count();
                 int randomIndex = rand.Next(1, maxId);
-
                 List<Word> randomWords = connection.Table<Word>().Where(x => x.Id.Equals(randomIndex)).ToList();
-                randomWord = randomWords[0];
+                randomWord = (Word) randomWords[0];
             }
             return randomWord.WordStr;
         }
@@ -134,8 +133,36 @@ namespace Wordle
          */
         public ValidatedWord ValidateWord(string wordStr)
         {
-            // TODO:
-            return new ValidatedWord();
+            Boolean isValid = false;
+            List<string> validationMessages = new List<string>();
+
+            if (wordStr.Length != COLUMNS)
+            {
+                validationMessages.Add( $"Must enter a {COLUMNS} letter word.");
+            } else {
+                using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
+                {
+                    List<Word> wordResult = connection.Table<Word>().Where(x => x.WordStr.Equals(wordStr.ToLower())).ToList();
+                    if (wordResult.Count < 1)
+                    {
+                        validationMessages.Add($"Word Not found in database.");
+                    }
+                    else
+                    {
+                        isValid = true;
+                    }
+                }
+            }
+
+            return new ValidatedWord()
+            {
+                WordStr = wordStr,
+                Length = wordStr.Length,
+                Letters = wordStr.ToCharArray(),
+                LetterStates = new Dictionary<string, Word.LetterState>(),
+                IsValid = isValid,
+                ValidationMessages = validationMessages
+            };
         }
 
         /**
