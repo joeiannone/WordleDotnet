@@ -57,7 +57,7 @@ namespace Wordle
         }
 
         /**
-         * 
+         * TODO: Updated this to only accept validated word
          * 
          */
         public Word Guess(string wordStr)
@@ -126,6 +126,16 @@ namespace Wordle
                 randomWord = randomWords[0];
             }
             return randomWord.WordStr;
+        }
+
+
+        /**
+         * 
+         */
+        public ValidatedWord ValidateWord(string wordStr)
+        {
+            // TODO:
+            return new ValidatedWord();
         }
 
         /**
