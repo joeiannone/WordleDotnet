@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Wordle;
 using Wordle.Models;
 using NUnit.Framework;
-using static System.Net.Mime.MediaTypeNames;
 using SQLite;
 
 namespace WordleTests
