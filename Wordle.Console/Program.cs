@@ -35,7 +35,8 @@ namespace WordleConsoleTest
 
             Game game = new Game(DBPath);
             Console.WriteLine(game.CurrentSecretWord);
-            Word guessResult = game.Guess("tasts");
+            ValidatedWord guess = game.ValidateWord("tasks");
+            ValidatedWord guessResult = game.Guess(guess);
 
             foreach (KeyValuePair<string, LetterState> kvp in guessResult.LetterStates)
             {

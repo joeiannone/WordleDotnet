@@ -59,7 +59,7 @@ namespace WordleWPFClient
         {
             Models.Word randomWord;
 
-            using (SQLiteConnection connection = new SQLiteConnection(App.WordsDbPath))
+            using (SQLiteConnection connection = new SQLiteConnection(App.DbConnectionString))
             {
                 Random rand = new Random();
                 int maxId = connection.Table<Models.Word>().Count();
@@ -186,7 +186,7 @@ namespace WordleWPFClient
             }
 
             // check if word guess is an actual word in database
-            using (SQLiteConnection connection = new SQLiteConnection(App.WordsDbPath))
+            using (SQLiteConnection connection = new SQLiteConnection(App.DbConnectionString))
             {
                 List<Models.Word> wordResult = connection.Table<Models.Word>().Where(x => x.Text.Equals(wordGuess.ToLower())).ToList<Models.Word>();
                 if (wordResult.Count < 1)

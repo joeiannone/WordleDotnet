@@ -28,7 +28,7 @@ namespace WordleWPFClient.Classes
 
         private bool validWord(string wordString)
         {
-            using (SQLiteConnection connection = new SQLiteConnection(App.WordsDbPath))
+            using (SQLiteConnection connection = new SQLiteConnection(App.DbConnectionString))
             {
                 List<Models.Word> result = connection.Table<Models.Word>().Where(word => word.Text.Equals(wordString)).ToList<Models.Word>();
                 
