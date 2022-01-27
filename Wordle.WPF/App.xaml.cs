@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Windows;
 using System.Windows.Resources;
-using WordleWPFClient.Models;
+using Wordle.Models;
 
-namespace WordleWPFClient
+namespace Wordle.WPF
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -37,10 +37,12 @@ namespace WordleWPFClient
             StreamResourceInfo info = Application.GetResourceStream(uri);
             var reader = new JsonTextReader(new StreamReader(info.Stream));
             List<string> wordStringList = JArray.Load(reader).ToObject<List<string>>();
-            List<Word> Words = wordStringList.ConvertAll(wordString => (new Word() { Text = wordString }));
+            List<Word> Words = wordStringList.ConvertAll(wordString => (new Word() { WordStr = wordString, Length = wordString.Length }));
 
             using (SQLiteConnection connection = new SQLiteConnection(DbConnectionString))
             {
+                Console.WriteLine(connection);
+                
                 connection.DropTable<Word>();
                 connection.CreateTable<Word>();
                 connection.InsertAll(Words);

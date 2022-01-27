@@ -1,9 +1,9 @@
-﻿<Window x:Class="WordleWPFClient.MainWindow"
+﻿<Window x:Class="Wordle.WPF.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WordleWPFClient"
+        xmlns:local="clr-namespace:Wordle.WPF"
         mc:Ignorable="d"
         Height="660"
         Width="400"
@@ -74,7 +74,7 @@
                 <Frame Source="GamePage.xaml"/>
             </TabItem>
             <TabItem Header="Play2" Visibility="Hidden">
-                <Frame Source="GamePage2.xaml"/>
+                <Frame Source="GamePage.xaml"/>
             </TabItem>
             <TabItem Name="AnalyticsTabItem" Header="Analytics"  Visibility="Hidden">
                 <Frame Source="UserAnalyticsPage.xaml"
@@ -89,6 +89,5 @@
                        VerticalAlignment="Bottom"
                        Text="Version 1.0.0"/>
         </Grid>
-
     </Grid>
 </Window>

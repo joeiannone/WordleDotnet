@@ -1,0 +1,52 @@
+﻿<Window
+    x:Class="Wordle.Desktop.MainWindow"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Wordle.Desktop"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+        <Grid x:Name="MainGrid"
+          Width="300">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Button Content="Replay"
+                Margin="5, 10"
+                Padding="5"
+                HorizontalAlignment="Right"
+                Grid.Row="2"
+                Background="White"
+                Foreground="DodgerBlue"
+                FontSize="12"
+                BorderThickness="0"/>
+            <TextBlock x:Name="UserMessageTextBlock" 
+                   Text=""
+                   FontSize="14"
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Top"
+                   Grid.Row="3"
+                   MinHeight="60"/>
+            <StackPanel x:Name="GamePanel"
+                    Grid.Row="4"></StackPanel>
+            <Button Content="Enter"
+                Margin="5, 10"
+                Padding="5"
+                HorizontalAlignment="Right"
+                Grid.Row="5"
+                Background="DodgerBlue"
+                Foreground="White"
+                FontSize="18"/>
+        </Grid>
+    </StackPanel>
+</Window>
