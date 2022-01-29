@@ -20,6 +20,18 @@ namespace WordleTests
             string DBPath = System.IO.Path.Combine(AppDataFolderPath, "Wordle.db");
             System.IO.Directory.CreateDirectory(AppDataFolderPath);
 
+            //string FilePath = System.IO.Path.Combine(Package.Current.InstalledLocation.Path, "Static\\five-letter-words.json");
+            //using (StreamReader file = File.OpenText(FilePath))
+            //{
+            //var json = file.ReadToEnd();
+            //List<string> result = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(json);
+            //Debug.WriteLine($"result count : {result.Count}");
+
+            //string contacts = result["country_list"].ToString();
+            //List<Word> objResponse = JsonConvert.DeserializeObject<List<Word>>(result);
+            //countryList.ItemsSource = objResponse;
+            //}
+
             using (SQLiteConnection connection = new SQLiteConnection(DBPath))
             {
                 connection.DropTable<Word>();
@@ -30,7 +42,7 @@ namespace WordleTests
 
             }
 
-            game = new Game(DBPath);
+            game = new Game();
 
         }
 

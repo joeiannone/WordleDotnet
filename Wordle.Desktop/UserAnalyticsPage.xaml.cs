@@ -11,7 +11,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace Wordle.WPF
+namespace Wordle.Desktop
 {
     /// <summary>
     /// Interaction logic for Page1.xaml
