@@ -45,7 +45,8 @@
                                 </Grid>
                                 <ControlTemplate.Triggers>
                                     <Trigger Property="IsSelected" Value="True">
-                                        <Setter TargetName="Border" Property="Background" Value="#f1f1f1" />
+                                        <Setter TargetName="Border" Property="Background" Value="#f9f9f9" />
+                                        <Setter Property="TextElement.Foreground" TargetName="ContentSite" Value="#000"/>
                                     </Trigger>
                                     <Trigger Property="IsSelected" Value="False">
                                         <Setter TargetName="Border" Property="Background" Value="#fff" />

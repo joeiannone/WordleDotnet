@@ -1,6 +1,7 @@
 ﻿using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 using Wordle.Models;
@@ -20,7 +21,7 @@ namespace Wordle
         private static string AppDataFolderPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Wordle\\Data");
         private static string DBConnectionString = System.IO.Path.Combine(AppDataFolderPath, "Wordle.db");
 
-        public const int COLUMNS = 5;
+        public int COLUMNS { get; } = 5;
         public int Rows;
         private List<char> lettersFound;
         private List<char> lettersRemaining;
@@ -79,20 +80,30 @@ namespace Wordle
             }
 
             // determine what letters have been found and update lists
+            // loop through letters in guess word where "i" is the position of the letter guess
             for (int i = 0; i < guess.Letters.Length; i++)
             {
                 char letter = guess.Letters[i];
 
                 string letterKey = $"{CurrentRowPosition}{i}";
+                
+                foreach(char l in lettersRemaining)
+                {
+                    Debug.Write(l);
+                }
+                Debug.WriteLine("\n");
 
+                // if current secret word contains this guess letter
                 if (new List<char>(CurrentSecretWord.Letters).Contains(letter))
                 {
-                    if (i == Array.IndexOf(CurrentSecretWord.Letters, letter))
+                    // if position matches
+                    if (letter == CurrentSecretWord.Letters[i])
                     {
                         lettersFound.Add(letter);
                         lettersRemaining.Remove(letter);
                         guess.LetterStates.Add(letterKey, Word.LetterState.isCorrect);
-                    } else
+                    } 
+                    else
                     {
                         if (lettersRemaining.Contains(letter))
                             guess.LetterStates.Add(letterKey, Word.LetterState.inWord);
@@ -105,6 +116,7 @@ namespace Wordle
                     guess.LetterStates.Add(letterKey, Word.LetterState.notInWord);
                 }
             }
+            Debug.WriteLine(lettersRemaining.Count);
 
 
             lettersFound.Clear();
@@ -138,19 +150,25 @@ namespace Wordle
          */
         public ValidatedWord ValidateWord(string wordStr)
         {
+            wordStr = wordStr.ToLower().Trim();
+            string msg;
             Boolean isValid = false;
             List<string> validationMessages = new List<string>();
 
             if (wordStr.Length != COLUMNS)
             {
-                validationMessages.Add( $"Must enter a {COLUMNS} letter word.");
+                msg = $"Must enter a {COLUMNS} letter word.";
+                validationMessages.Add(msg);
+                throw new InvalidOperationException(msg);
             } else {
                 using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
                 {
                     List<Word> wordResult = connection.Table<Word>().Where(x => x.WordStr.Equals(wordStr.ToLower())).ToList();
                     if (wordResult.Count < 1)
                     {
-                        validationMessages.Add($"Word Not found in database.");
+                        msg = $"Word Not found in database.";
+                        validationMessages.Add(msg);
+                        throw new InvalidOperationException(msg);
                     }
                     else
                     {
