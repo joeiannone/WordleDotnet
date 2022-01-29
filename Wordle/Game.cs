@@ -54,7 +54,7 @@ namespace Wordle
          */
         public void IncrementRowPosition()
         {
-            if (CurrentRowPosition < (Rows - 1) && !wordFound)
+            if (CurrentRowPosition < Rows && !wordFound)
             {
                 CurrentRowPosition++;
             }
@@ -86,12 +86,6 @@ namespace Wordle
                 char letter = guess.Letters[i];
 
                 string letterKey = $"{CurrentRowPosition}{i}";
-                
-                foreach(char l in lettersRemaining)
-                {
-                    Debug.Write(l);
-                }
-                Debug.WriteLine("\n");
 
                 // if current secret word contains this guess letter
                 if (new List<char>(CurrentSecretWord.Letters).Contains(letter))
@@ -116,8 +110,6 @@ namespace Wordle
                     guess.LetterStates.Add(letterKey, Word.LetterState.notInWord);
                 }
             }
-            Debug.WriteLine(lettersRemaining.Count);
-
 
             lettersFound.Clear();
             lettersRemaining.Clear();

@@ -8,6 +8,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using Wordle;
 using Wordle.Models;
+using static Wordle.Models.Word;
 
 namespace Wordle.Desktop
 {
@@ -105,8 +106,6 @@ namespace Wordle.Desktop
             }
 
             GamePanel.Children.Add(GameGrid);
-
-            //wordleLetters[0][0].associatedTextBox.Focus();
         }
 
         private void ReplayButton_Click(object sender, RoutedEventArgs e)
@@ -122,24 +121,76 @@ namespace Wordle.Desktop
                 guessStr += $"{TextBoxes[$"x{game.CurrentRowPosition}x{col}"].Text}";
             }
             
-
             try
             {
                 ValidatedWord guess = game.ValidateWord(guessStr);
                 ValidatedWord guessResult = game.Guess(guess);
+                UpdateGameGridState(guessResult);
             }
             catch (InvalidOperationException ex)
             {
                 Debug.WriteLine(ex.Message);
+                UserMessageTextBlock.Text = ex.Message;
             }
            
             
 
         }
 
-        private void UpdateGridState(ValidatedWord guessResult)
+        private void UpdateGameGridState(ValidatedWord guessResult)
         {
-            // TODO
+            if (guessResult.ValidationMessages.Count != 0)
+                return;
+
+            for (int col = 0; col < game.COLUMNS; col++)
+            {
+                LetterState letterState = guessResult.LetterStates[$"{game.CurrentRowPosition}{col}"];
+                TextBox textBox = TextBoxes[$"x{game.CurrentRowPosition}x{col}"];
+                textBox.IsEnabled = false;
+                switch (letterState)
+                {
+                    case LetterState.isCorrect:
+                        textBox.Background = Brushes.Green;
+                        break;
+
+                    case LetterState.inWord:
+                        textBox.Background = Brushes.Yellow;
+                        break;
+
+                    case LetterState.notInWord:
+                        textBox.Background = Brushes.Gray;
+                        break;
+                }
+            }
+
+            game.IncrementRowPosition();
+            Debug.WriteLine($"pos: {game.CurrentRowPosition}, {game.Rows}");
+
+            if (game.wordFound)
+            {
+                UserMessageTextBlock.Text = "Congrats! You got it.";
+                return;
+            }
+            else if (game.CurrentRowPosition == game.Rows)
+            {
+                UserMessageTextBlock.Text = $"You missed the mark :( \nThe word was {game.CurrentSecretWord.ToString()}. ";
+                return;
+            }
+
+            
+            for (int col = 0; col < game.COLUMNS; col++)
+            {
+                TextBox textBox = TextBoxes[$"x{game.CurrentRowPosition}x{col}"];
+                textBox.Background = Brushes.AliceBlue;
+                textBox.IsEnabled = true;
+                if (col == 0)
+                    textBox.Focus();
+            }
+        }
+
+        private char[] GetTextBoxKeyArray()
+        {
+            return new char[5];
         }
 
 
@@ -211,7 +262,6 @@ namespace Wordle.Desktop
             string senderName = senderObj.GetValue(FrameworkElement.NameProperty).ToString();
             string senderText = ((TextBox)sender).Text;
 
-            Debug.WriteLine(e.Key.GetType().Name);
             if (e.Key == Key.Return)
             {
                 SubmitGuess();
