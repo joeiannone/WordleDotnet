@@ -4,6 +4,7 @@ using Wordle;
 using Wordle.Models;
 using NUnit.Framework;
 using SQLite;
+using System.Threading.Tasks;
 
 namespace WordleTests
 {
@@ -114,6 +115,17 @@ namespace WordleTests
             }
 
             
+        }
+
+        [Test]
+        public async Task TestGetUserStatsAsync()
+        {
+            List<UserStats> userStats = await game.GetUserStatsAsync();
+            Console.WriteLine($"Records found: {userStats.Count}");
+            foreach (UserStats us in userStats)
+            {
+                Console.WriteLine($"{us.Word} - {us.TimeSpan.ToString()} - {us.GuessCount}");
+            }
         }
 
     }

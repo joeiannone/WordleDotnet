@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Reflection;
+using System.Threading.Tasks;
 using Wordle.Models;
 
 namespace Wordle
@@ -30,6 +31,7 @@ namespace Wordle
         public bool wordFound = false;
         public int CurrentRowPosition { get; set; }
         public Word CurrentSecretWord { get; set; }
+        public UserStats GameStats { get; set; }
 
 
         public Game(int rows = 6)
@@ -47,6 +49,7 @@ namespace Wordle
             Rows = rows;
             CurrentSecretWord = Word.CreateWord(GenerateRandomWord());
             StartTime = DateTime.Now;
+            GameStats = UserStats.CreateUserStatsModel(CurrentSecretWord.ToString());
         }
 
         /**
@@ -79,6 +82,7 @@ namespace Wordle
             {
                 wordFound = true;
                 timespan = DateTime.Now - StartTime;
+                GameStats.SolutionFound = true;
             }
 
             //new
@@ -114,6 +118,15 @@ namespace Wordle
                 }
             }
 
+            if (CurrentRowPosition == Rows - 1 || wordFound)
+            {
+                GameStats.EndTime = DateTime.Now;
+                GameStats.TimeSpan = GameStats.EndTime - GameStats.StartTime;
+                GameStats.GuessCount = CurrentRowPosition + 1;
+                GameStats.SolutionFound = wordFound;
+                SaveGameStats();
+            }
+
             return guess;
         }
 
@@ -134,6 +147,27 @@ namespace Wordle
                 randomWord = randomWords[0];
             }
             return randomWord.WordStr;
+        }
+
+
+        private void SaveGameStats()
+        {
+            using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
+            {
+                connection.Insert(GameStats);
+            }
+        }
+
+        public Task<List<UserStats>> GetUserStatsAsync(int top = 20)
+        {
+            List<UserStats> userStatsList = new List<UserStats>();
+            using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
+            {
+                userStatsList = connection.Table<UserStats>().OrderByDescending(t => t.GuessCount).OrderByDescending(t => t.TimeSpan).Take(top).ToList();
+                //userStatsList = connection.Table<UserStats>().ToList();
+            }
+            userStatsList.Reverse();
+            return Task.FromResult(userStatsList);
         }
 
 
@@ -212,6 +246,7 @@ namespace Wordle
             {
                 connection.DropTable<Word>();
                 connection.CreateTable<Word>();
+                connection.CreateTable<UserStats>();
                 connection.InsertAll(Words);
             }
         }

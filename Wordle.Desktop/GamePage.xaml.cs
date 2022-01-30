@@ -28,7 +28,6 @@ namespace Wordle.Desktop
             InitializeComponent();
             InitGame();
             this.Loaded += GamePage_Loaded;
-
         }
 
         private void InitGame()
@@ -70,9 +69,7 @@ namespace Wordle.Desktop
             {
                 ColumnDefinition col = new ColumnDefinition();
                 col.Width = new GridLength(1, GridUnitType.Star);
-
                 GameGrid.ColumnDefinitions.Add(col);
-
             }
 
             // add row definitions
@@ -126,7 +123,6 @@ namespace Wordle.Desktop
 
         private void ReplayButton_Click(object sender, RoutedEventArgs e)
         {
-            Debug.WriteLine("Replay button Clicked");
             InitGame();
         }
 
@@ -138,11 +134,8 @@ namespace Wordle.Desktop
             string guessStr = "";
             for (int col = 0; col < game.COLUMNS; col++)
             {
-                string letter = TextBoxes[$"x{game.CurrentRowPosition}x{col}"].Content.ToString();
-                guessStr += letter;
+                guessStr += TextBoxes[$"x{game.CurrentRowPosition}x{col}"].Content;
             }
-            Debug.WriteLine(game.CurrentRowPosition);
-            Debug.WriteLine(guessStr);
 
             try
             {
@@ -153,7 +146,6 @@ namespace Wordle.Desktop
             }
             catch (InvalidOperationException ex)
             {
-                Debug.WriteLine(ex.Message);
                 UserMessageTextBlock.Content = ex.Message;
             }
 
@@ -211,7 +203,6 @@ namespace Wordle.Desktop
 
         private void Page_KeyUp(object sender, KeyEventArgs e)
         {
-            Debug.WriteLine($"Active column: {ActiveColumn}");
             // is a string with length 1 and is a letter
             if (e.Key.ToString().Length == 1 && char.IsLetter(char.Parse(e.Key.ToString())))
             {

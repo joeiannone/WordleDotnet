@@ -60,8 +60,8 @@
             <TabItem Header="Play">
                 <Frame Source="GamePage.xaml"/>
             </TabItem>
-            <TabItem Header="Analytics">
-                <Frame Source="UserAnalyticsPage.xaml"/>
+            <TabItem Header="Stats">
+                <Frame Source="UserStatisticsPage.xaml"/>
             </TabItem>
             <TabItem Header="Settings">
                 <Frame Source="SettingsPage.xaml"/>

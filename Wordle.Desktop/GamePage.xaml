@@ -46,12 +46,10 @@
                     Grid.Row="4"></StackPanel>
         <Button Content="Enter"
                 Click="SubmitButton_Click"
-                Margin="5, 10"
-                Padding="5"
+                Margin="5,10"
+                Padding="10,5"
                 HorizontalAlignment="Right"
                 Grid.Row="5"
-                Background="DodgerBlue"
-                Foreground="White"
                 FontSize="18"/>
     </Grid>
 </Page>
