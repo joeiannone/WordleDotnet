@@ -73,8 +73,8 @@ namespace WordleTests
             correctState.Add("00", Word.LetterState.notInWord);
             correctState.Add("01", Word.LetterState.isCorrect);
             correctState.Add("02", Word.LetterState.notInWord);
-            correctState.Add("03", Word.LetterState.inWord);
-            correctState.Add("04", Word.LetterState.inWord);
+            correctState.Add("03", Word.LetterState.isCorrect);
+            correctState.Add("04", Word.LetterState.isCorrect);
             Assert.AreEqual(correctState, guess.LetterStates);
 
 

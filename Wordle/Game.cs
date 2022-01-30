@@ -23,8 +23,6 @@ namespace Wordle
 
         public int COLUMNS { get; } = 5;
         public int Rows;
-        private List<char> lettersFound;
-        private List<char> lettersRemaining;
         public DateTime StartTime;
         public TimeSpan timespan { get; set; }
 
@@ -47,7 +45,6 @@ namespace Wordle
         {
             BuildDatabase();
             Rows = rows;
-            lettersFound = new List<char>();
             CurrentSecretWord = Word.CreateWord(GenerateRandomWord());
             StartTime = DateTime.Now;
         }
@@ -74,8 +71,8 @@ namespace Wordle
                 return guess;
             }
 
-            lettersRemaining = new List<char>(CurrentSecretWord.Letters);
             Dictionary<char, int> inWordFrequenciesCountDown = CurrentSecretWord.GetLetterFrequencies();
+            List<char> solutionLetters = new List<char>(CurrentSecretWord.Letters);
 
             // before doing anything check for an exact match
             if (guess.ToString() == CurrentSecretWord.ToString())
@@ -84,42 +81,38 @@ namespace Wordle
                 timespan = DateTime.Now - StartTime;
             }
 
-            // determine what letters have been found and update lists
-            // loop through letters in guess word where "i" is the position of the letter guess
+            //new
+            // check for correct first
             for (int i = 0; i < guess.Letters.Length; i++)
             {
                 char letter = guess.Letters[i];
-
                 string letterKey = $"{CurrentRowPosition}{i}";
 
-                // if current secret word contains this guess letter
-                if (new List<char>(CurrentSecretWord.Letters).Contains(letter))
+                if (letter == CurrentSecretWord.Letters[i])
                 {
-                    // if position matches
-                    if (letter == CurrentSecretWord.Letters[i])
-                    {
-                        lettersFound.Add(letter);
-                        lettersRemaining.Remove(letter);
-                        inWordFrequenciesCountDown[letter]--;
-                        guess.LetterStates.Add(letterKey, Word.LetterState.isCorrect);
-                    } 
-                    else
-                    {
-
-                        if (lettersRemaining.Contains(letter) && inWordFrequenciesCountDown[letter] > 0)
-                            guess.LetterStates.Add(letterKey, Word.LetterState.inWord);
-                        else
-                            guess.LetterStates.Add(letterKey, Word.LetterState.notInWord);
-                    }
-                }
-                else
-                {
-                    guess.LetterStates.Add(letterKey, Word.LetterState.notInWord);
+                    guess.LetterStates[letterKey] = Word.LetterState.isCorrect;
+                    inWordFrequenciesCountDown[letter]--;
                 }
             }
 
-            lettersFound.Clear();
-            lettersRemaining.Clear();
+            // handle the rest
+            for (int i = 0; i < guess.Letters.Length; i++)
+            {
+                char letter = guess.Letters[i];
+                string letterKey = $"{CurrentRowPosition}{i}";
+
+                if (guess.LetterStates.ContainsKey(letterKey))
+                    continue;
+
+                if (solutionLetters.Contains(letter) && inWordFrequenciesCountDown[letter] > 0)
+                {
+                    guess.LetterStates[letterKey] = Word.LetterState.inWord;
+                }
+                else 
+                {
+                    guess.LetterStates[letterKey] = Word.LetterState.notInWord;
+                }
+            }
 
             return guess;
         }
