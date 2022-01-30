@@ -33,7 +33,8 @@ namespace Wordle.Desktop
             if (GameGrid != null)
                 GameGrid.Children.Clear();
             BuildWordleGrid();
-            UserMessageTextBlock.Text = game.CurrentSecretWord.ToString();
+            TextBoxes["x0x0"].Focus();
+            UserMessageTextBlock.Content = "";
         }
 
 
@@ -59,8 +60,6 @@ namespace Wordle.Desktop
                 row.Height = new GridLength(1, GridUnitType.Star);
                 GameGrid.RowDefinitions.Add(row);
             }
-
-
 
             GameGrid.VerticalAlignment = VerticalAlignment.Top;
 
@@ -130,7 +129,7 @@ namespace Wordle.Desktop
             catch (InvalidOperationException ex)
             {
                 Debug.WriteLine(ex.Message);
-                UserMessageTextBlock.Text = ex.Message;
+                UserMessageTextBlock.Content = ex.Message;
             }
            
             
@@ -168,16 +167,17 @@ namespace Wordle.Desktop
 
             if (game.wordFound)
             {
-                UserMessageTextBlock.Text = "Congrats! You got it.";
+                UserMessageTextBlock.Content = $"Congrats! You got it.\nYou found the word in {game.GetTimespanDisplayString()}";
+                ReplayButton.Focus();
                 return;
             }
             else if (game.CurrentRowPosition == game.Rows)
             {
-                UserMessageTextBlock.Text = $"You missed the mark :( \nThe word was {game.CurrentSecretWord.ToString()}. ";
+                UserMessageTextBlock.Content = $"You missed the mark :( \nThe word was {game.CurrentSecretWord.ToString()}. ";
+                ReplayButton.Focus();
                 return;
             }
 
-            
             for (int col = 0; col < game.COLUMNS; col++)
             {
                 TextBox textBox = TextBoxes[$"x{game.CurrentRowPosition}x{col}"];

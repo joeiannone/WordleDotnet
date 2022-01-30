@@ -25,6 +25,8 @@ namespace Wordle
         public int Rows;
         private List<char> lettersFound;
         private List<char> lettersRemaining;
+        public DateTime StartTime;
+        public TimeSpan timespan { get; set; }
 
         // this gets changed inside Guess method
         public bool wordFound = false;
@@ -47,6 +49,7 @@ namespace Wordle
             Rows = rows;
             lettersFound = new List<char>();
             CurrentSecretWord = Word.CreateWord(GenerateRandomWord());
+            StartTime = DateTime.Now;
         }
 
         /**
@@ -77,6 +80,7 @@ namespace Wordle
             if (guess.ToString() == CurrentSecretWord.ToString())
             {
                 wordFound = true;
+                timespan = DateTime.Now - StartTime;
             }
 
             // determine what letters have been found and update lists
@@ -158,7 +162,7 @@ namespace Wordle
                     List<Word> wordResult = connection.Table<Word>().Where(x => x.WordStr.Equals(wordStr.ToLower())).ToList();
                     if (wordResult.Count < 1)
                     {
-                        msg = $"Word Not found in database.";
+                        msg = $"Word not found in database.";
                         validationMessages.Add(msg);
                         throw new InvalidOperationException(msg);
                     }
@@ -213,6 +217,29 @@ namespace Wordle
                 connection.DropTable<Word>();
                 connection.CreateTable<Word>();
                 connection.InsertAll(Words);
+            }
+        }
+
+        public string GetTimespanDisplayString()
+        {
+            if (timespan.TotalSeconds >= 3600)
+            {
+                return string.Format("{0:D2}h:{1:D2}m:{2:D2}s",
+                    timespan.Hours,
+                    timespan.Minutes,
+                    timespan.Seconds
+                );
+            }
+            else if (timespan.TotalSeconds >= 60)
+            {
+                return string.Format("{0:D2}m:{1:D2}s",
+                    timespan.Minutes,
+                    timespan.Seconds
+                );
+            }
+            else
+            {
+                return string.Format("{0:D2}s", timespan.Seconds);
             }
         }
 

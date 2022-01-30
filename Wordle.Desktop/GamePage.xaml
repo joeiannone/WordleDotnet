@@ -20,7 +20,8 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Button Content="Replay"
+        <Button Name="ReplayButton" 
+                Content="Replay"
                 Click="ReplayButton_Click"
                 Margin="5, 10"
                 Padding="5"
@@ -30,13 +31,14 @@
                 Foreground="DodgerBlue"
                 FontSize="12"
                 BorderThickness="0"/>
-        <TextBlock x:Name="UserMessageTextBlock" 
-                   Text=""
+        <Label x:Name="UserMessageTextBlock" 
+                   Content=""
+                   VerticalContentAlignment="Center"
                    FontSize="14"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Top"
                    Grid.Row="3"
-                   MinHeight="60"/>
+                   MinHeight="70"/>
         <StackPanel x:Name="GamePanel"
                     Grid.Row="4"></StackPanel>
         <Button Content="Enter"

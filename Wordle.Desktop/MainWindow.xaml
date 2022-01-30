@@ -64,10 +64,10 @@
                 <Frame Source="UserAnalyticsPage.xaml"/>
             </TabItem>
             <TabItem Header="Settings">
-                <Frame Source="GamePage.xaml"/>
+                <Frame Source="SettingsPage.xaml"/>
             </TabItem>
             <TabItem Header="Info">
-                <Frame Source="UserAnalyticsPage.xaml"/>
+                <Frame Source="InfoPage.xaml"/>
             </TabItem>
         </TabControl>
 
