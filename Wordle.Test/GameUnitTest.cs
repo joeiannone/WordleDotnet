@@ -61,6 +61,26 @@ namespace WordleTests
         }
 
         [Test]
+        public void TestGuess3()
+        {
+            game.CurrentSecretWord = Word.CreateWord("zingy");
+
+            ValidatedWord guess = game.ValidateWord("biggy");
+
+            ValidatedWord guessResult = game.Guess(guess);
+
+            Dictionary<string, Word.LetterState> correctState = new Dictionary<string, Word.LetterState>();
+            correctState.Add("00", Word.LetterState.notInWord);
+            correctState.Add("01", Word.LetterState.isCorrect);
+            correctState.Add("02", Word.LetterState.notInWord);
+            correctState.Add("03", Word.LetterState.inWord);
+            correctState.Add("04", Word.LetterState.inWord);
+            Assert.AreEqual(correctState, guess.LetterStates);
+
+
+        }
+
+        [Test]
         public void TestWordValidation()
         {
             ValidatedWord word;
