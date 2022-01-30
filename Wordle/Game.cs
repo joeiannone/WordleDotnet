@@ -227,7 +227,7 @@ namespace Wordle
         {
             if (timespan.TotalSeconds >= 3600)
             {
-                return string.Format("{0:D2}h {1:D2}m {2:D2}s",
+                return string.Format("{0}h {1}m {2}s",
                     timespan.Hours,
                     timespan.Minutes,
                     timespan.Seconds
@@ -235,14 +235,14 @@ namespace Wordle
             }
             else if (timespan.TotalSeconds >= 60)
             {
-                return string.Format("{0:D2}m {1:D2}s",
+                return string.Format("{0}m {1}s",
                     timespan.Minutes,
                     timespan.Seconds
                 );
             }
             else
             {
-                return string.Format("{0D2}s", timespan.Seconds);
+                return string.Format("{0}s", timespan.Seconds);
             }
         }
 

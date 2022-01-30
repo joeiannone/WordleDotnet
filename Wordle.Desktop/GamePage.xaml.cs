@@ -36,7 +36,7 @@ namespace Wordle.Desktop
             if (GameGrid != null)
                 GameGrid.Children.Clear();
             BuildWordleGrid();
-            UserMessageTextBlock.Content = "";
+            UserMessageTextBlock.Content = game.CurrentSecretWord;
             ActiveColumn = 0;
 
             this.KeyUp -= Page_KeyUp;
@@ -137,20 +137,21 @@ namespace Wordle.Desktop
             {
                 guessStr += $"{TextBoxes[$"x{game.CurrentRowPosition}x{col}"].Content}";
             }
-            
+            Debug.WriteLine(game.CurrentRowPosition);
+            Debug.WriteLine(guessStr);
+
             try
             {
                 ValidatedWord guess = game.ValidateWord(guessStr);
                 ValidatedWord guessResult = game.Guess(guess);
                 UpdateGameGridState(guessResult);
+                ActiveColumn = 0;
             }
             catch (InvalidOperationException ex)
             {
                 Debug.WriteLine(ex.Message);
                 UserMessageTextBlock.Content = ex.Message;
             }
-
-            ActiveColumn = 0;
 
         }
 
