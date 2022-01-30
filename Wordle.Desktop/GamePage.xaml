@@ -20,6 +20,9 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
+        <Button Name="FakeButton"
+                Height="0"
+                Width="0"/>
         <Button Name="ReplayButton" 
                 Content="Replay"
                 Click="ReplayButton_Click"

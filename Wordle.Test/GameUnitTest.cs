@@ -15,35 +15,7 @@ namespace WordleTests
         [SetUp]
         public void SetUp()
         {
-            // create sqlite db string
-            string AppDataFolderPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Wordle\\Data\\Test");
-            string DBPath = System.IO.Path.Combine(AppDataFolderPath, "Wordle.db");
-            System.IO.Directory.CreateDirectory(AppDataFolderPath);
-
-            //string FilePath = System.IO.Path.Combine(Package.Current.InstalledLocation.Path, "Static\\five-letter-words.json");
-            //using (StreamReader file = File.OpenText(FilePath))
-            //{
-            //var json = file.ReadToEnd();
-            //List<string> result = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(json);
-            //Debug.WriteLine($"result count : {result.Count}");
-
-            //string contacts = result["country_list"].ToString();
-            //List<Word> objResponse = JsonConvert.DeserializeObject<List<Word>>(result);
-            //countryList.ItemsSource = objResponse;
-            //}
-
-            using (SQLiteConnection connection = new SQLiteConnection(DBPath))
-            {
-                connection.DropTable<Word>();
-                connection.CreateTable<Word>();
-                connection.Insert(Word.CreateWord("teach"));
-                connection.Insert(Word.CreateWord("irony"));
-                connection.Insert(Word.CreateWord("react"));
-
-            }
-
             game = new Game();
-
         }
 
         [Test]
@@ -65,6 +37,30 @@ namespace WordleTests
         }
 
         [Test]
+        public void TestGuess2()
+        {
+            game.CurrentSecretWord = Word.CreateWord("dealt");
+
+            ValidatedWord guess = game.ValidateWord("teeth");
+
+            ValidatedWord guessResult = game.Guess(guess);
+
+            //Console.WriteLine(game.CurrentSecretWord);
+            //Console.WriteLine(guessResult.ToString());
+            //Console.WriteLine(guessResult.LetterStatesToString());
+
+            Dictionary<string, Word.LetterState> correctState = new Dictionary<string, Word.LetterState>();
+            correctState.Add("00", Word.LetterState.inWord);
+            correctState.Add("01", Word.LetterState.isCorrect);
+            correctState.Add("02", Word.LetterState.notInWord);
+            correctState.Add("03", Word.LetterState.inWord);
+            correctState.Add("04", Word.LetterState.notInWord);
+            Assert.AreEqual(correctState, guess.LetterStates);
+
+            
+        }
+
+        [Test]
         public void TestWordValidation()
         {
             ValidatedWord word;
@@ -73,14 +69,32 @@ namespace WordleTests
             Assert.AreEqual(word.IsValid, true);
             Assert.AreEqual(word.ValidationMessages.Count, 0);
 
-            word = game.ValidateWord("sdfsdfs");
-            Assert.AreEqual(word.IsValid, false);
-            Assert.AreEqual(word.ValidationMessages.Count, 1);
+            try
+            {
+                word = game.ValidateWord("sdfsdfs");
+                Assert.AreEqual(word.IsValid, false);
+                Assert.AreEqual(word.ValidationMessages.Count, 1);
+            }
+            catch (InvalidOperationException ex)
+            {
+                
+                Assert.AreEqual(ex.Message, "Must enter a 5 letter word.");
+                
+            }
+            try
+            {
+                word = game.ValidateWord("gfdsh");
+                Assert.AreEqual(word.IsValid, false);
+                Assert.AreEqual(word.ValidationMessages.Count, 1);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Assert.AreEqual(ex.Message, "Word not found in database.");
+               
+            }
 
-            word = game.ValidateWord("gfdsh");
-            Assert.AreEqual(word.IsValid, false);
-            Assert.AreEqual(word.ValidationMessages.Count, 1);
-
+            
         }
+
     }
 }

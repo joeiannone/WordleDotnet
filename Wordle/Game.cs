@@ -75,6 +75,7 @@ namespace Wordle
             }
 
             lettersRemaining = new List<char>(CurrentSecretWord.Letters);
+            Dictionary<char, int> inWordFrequenciesCountDown = CurrentSecretWord.GetLetterFrequencies();
 
             // before doing anything check for an exact match
             if (guess.ToString() == CurrentSecretWord.ToString())
@@ -99,11 +100,13 @@ namespace Wordle
                     {
                         lettersFound.Add(letter);
                         lettersRemaining.Remove(letter);
+                        inWordFrequenciesCountDown[letter]--;
                         guess.LetterStates.Add(letterKey, Word.LetterState.isCorrect);
                     } 
                     else
                     {
-                        if (lettersRemaining.Contains(letter))
+
+                        if (lettersRemaining.Contains(letter) && inWordFrequenciesCountDown[letter] > 0)
                             guess.LetterStates.Add(letterKey, Word.LetterState.inWord);
                         else
                             guess.LetterStates.Add(letterKey, Word.LetterState.notInWord);
@@ -224,7 +227,7 @@ namespace Wordle
         {
             if (timespan.TotalSeconds >= 3600)
             {
-                return string.Format("{0:D2}h:{1:D2}m:{2:D2}s",
+                return string.Format("{0:D2}h {1:D2}m {2:D2}s",
                     timespan.Hours,
                     timespan.Minutes,
                     timespan.Seconds
@@ -232,14 +235,14 @@ namespace Wordle
             }
             else if (timespan.TotalSeconds >= 60)
             {
-                return string.Format("{0:D2}m:{1:D2}s",
+                return string.Format("{0:D2}m {1:D2}s",
                     timespan.Minutes,
                     timespan.Seconds
                 );
             }
             else
             {
-                return string.Format("{0:D2}s", timespan.Seconds);
+                return string.Format("{0D2}s", timespan.Seconds);
             }
         }
 

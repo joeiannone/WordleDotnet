@@ -19,12 +19,15 @@ namespace Wordle.Desktop
     {
         private Game game;
         private Grid GameGrid;
-        private Dictionary<string, TextBox> TextBoxes;
+        private Dictionary<string, Label> TextBoxes;
+        private int ActiveColumn = 0;
 
         public GamePage()
         {
             InitializeComponent();
             InitGame();
+            this.Loaded += GamePage_Loaded;
+
         }
 
         private void InitGame()
@@ -33,15 +36,30 @@ namespace Wordle.Desktop
             if (GameGrid != null)
                 GameGrid.Children.Clear();
             BuildWordleGrid();
-            TextBoxes["x0x0"].Focus();
             UserMessageTextBlock.Content = "";
+            ActiveColumn = 0;
+
+            this.KeyUp -= Page_KeyUp;
+            this.KeyUp += Page_KeyUp;
+        }
+
+        private void IncrementActiveColumn()
+        {
+            if (ActiveColumn < game.COLUMNS - 1)
+                ActiveColumn++;
+        }
+
+        private void DecrementActiveColumn()
+        {
+            if (ActiveColumn > 0)
+                ActiveColumn--;
         }
 
 
         private void BuildWordleGrid()
         {
             GameGrid = new Grid();
-            TextBoxes = new Dictionary<string, TextBox>();
+            TextBoxes = new Dictionary<string, Label>();
 
             // add column definitions
             for (int i = 0; i < game.COLUMNS; i++)
@@ -70,18 +88,18 @@ namespace Wordle.Desktop
                 // col
                 for (int j = 0; j < game.COLUMNS; j++)
                 {
-                    TextBox textBox = new TextBox();
-
+                    //TextBox textBox = new TextBox();
+                    Label textBox = new Label();
                     textBox.FontSize = 24;
-                    textBox.MaxLength = 1;
+                    //textBox.MaxLength = 1;
                     textBox.Height = 50;
                     textBox.Margin = new Thickness(2);
                     textBox.Padding = new Thickness(2);
                     textBox.Background = Brushes.AliceBlue;
                     textBox.Name = $"x{i}x{j}";
-                    textBox.CharacterCasing = CharacterCasing.Upper;
-                    textBox.TextChanged += LetterInput_TextChanged;
-                    textBox.KeyUp += LetterInput_KeyUp;
+                    //textBox.CharacterCasing = CharacterCasing.Upper;
+                    //textBox.TextChanged += LetterInput_TextChanged;
+                    //textBox.KeyUp += LetterInput_KeyUp;
 
 
                     if (j > 0)
@@ -117,7 +135,7 @@ namespace Wordle.Desktop
             string guessStr = "";
             for (int col = 0; col < game.COLUMNS; col++)
             {
-                guessStr += $"{TextBoxes[$"x{game.CurrentRowPosition}x{col}"].Text}";
+                guessStr += $"{TextBoxes[$"x{game.CurrentRowPosition}x{col}"].Content}";
             }
             
             try
@@ -131,8 +149,8 @@ namespace Wordle.Desktop
                 Debug.WriteLine(ex.Message);
                 UserMessageTextBlock.Content = ex.Message;
             }
-           
-            
+
+            ActiveColumn = 0;
 
         }
 
@@ -144,7 +162,7 @@ namespace Wordle.Desktop
             for (int col = 0; col < game.COLUMNS; col++)
             {
                 LetterState letterState = guessResult.LetterStates[$"{game.CurrentRowPosition}{col}"];
-                TextBox textBox = TextBoxes[$"x{game.CurrentRowPosition}x{col}"];
+                Label textBox = TextBoxes[$"x{game.CurrentRowPosition}x{col}"];
                 textBox.IsEnabled = false;
                 switch (letterState)
                 {
@@ -163,7 +181,6 @@ namespace Wordle.Desktop
             }
 
             game.IncrementRowPosition();
-            Debug.WriteLine($"pos: {game.CurrentRowPosition}, {game.Rows}");
 
             if (game.wordFound)
             {
@@ -180,7 +197,7 @@ namespace Wordle.Desktop
 
             for (int col = 0; col < game.COLUMNS; col++)
             {
-                TextBox textBox = TextBoxes[$"x{game.CurrentRowPosition}x{col}"];
+                Label textBox = TextBoxes[$"x{game.CurrentRowPosition}x{col}"];
                 textBox.Background = Brushes.AliceBlue;
                 textBox.IsEnabled = true;
                 if (col == 0)
@@ -253,6 +270,39 @@ namespace Wordle.Desktop
             }
         }
 
+        private void Page_KeyUp(object sender, KeyEventArgs e)
+        {
+            // is a letter
+            if (e.Key.ToString().Length == 1 && char.IsLetter(char.Parse(e.Key.ToString())))
+            {
+                string letter = e.Key.ToString().ToUpper().Trim();
+                Label activeTextBox = TextBoxes[$"x{game.CurrentRowPosition}x{ActiveColumn}"];
+                activeTextBox.Content = letter;
+                activeTextBox.BorderThickness = new Thickness(1);
+                activeTextBox.BorderBrush = Brushes.Black;
+                IncrementActiveColumn();
+                Debug.WriteLine(e.Key.ToString());
+            }
+            else if (e.Key == Key.Enter)
+            {
+                SubmitGuess();
+            }
+            else if (e.Key == Key.Back)
+            {
+                Label activeTextBox = TextBoxes[$"x{game.CurrentRowPosition}x{ActiveColumn}"];
+                if (activeTextBox.Content.ToString().Length == 0)
+                {
+                    DecrementActiveColumn();
+                }
+                activeTextBox.Content = "";
+                activeTextBox.BorderThickness = new Thickness(1);
+                activeTextBox.BorderBrush = Brushes.Black;
+
+            }
+            
+
+        }
+
         /**
          * 
          */
@@ -268,14 +318,13 @@ namespace Wordle.Desktop
             }
             else if (e.Key == Key.Back)
             {
-                // TODO: backspace through inputs (like shift + tab)
                 try
                 {
                     if (senderText.Length == 0)
                     {
                         string decrementedKey = DecrementTextBoxColumnKey(senderName);
                         TextBoxes[decrementedKey].Focus();
-                        TextBoxes[decrementedKey].Text = "";
+                        TextBoxes[decrementedKey].Content = "";
                     }
                 }
                 catch (InvalidOperationException ex)
@@ -284,11 +333,21 @@ namespace Wordle.Desktop
                 }
 
             }
+            else
+            {
+                
+            }
         }
 
         private void SubmitButton_Click(object sender, RoutedEventArgs e)
         {
             SubmitGuess();
+        }
+
+        private void GamePage_Loaded(object sender, RoutedEventArgs e)
+        {
+            // focus this buttonfor the sake of key listener on page
+            FakeButton.Focus();
         }
     }
 }

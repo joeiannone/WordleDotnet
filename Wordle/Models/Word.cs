@@ -43,6 +43,19 @@ namespace Wordle.Models
             return letterStatesStr;
         }
 
+        public Dictionary<char, int> GetLetterFrequencies()
+        {
+            Dictionary<char, int> frequencies = new Dictionary<char, int>();
+            foreach (char c in Letters)
+            {
+                if (frequencies.ContainsKey(c))
+                    frequencies[c]++;
+                else
+                    frequencies[c] = 1;
+            }
+            return frequencies;
+        }
+
         public static Word CreateWord(string wordStr)
         {
             return new Word() {
