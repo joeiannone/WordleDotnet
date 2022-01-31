@@ -16,8 +16,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Wordle\Wordle.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\five-letter-words.json" />
-  </ItemGroup>
 
 </Project>

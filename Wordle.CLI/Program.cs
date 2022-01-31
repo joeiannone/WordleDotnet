@@ -10,7 +10,7 @@ using Wordle.Models;
 using static System.Net.Mime.MediaTypeNames;
 using static Wordle.Models.Word;
 
-namespace WordleConsoleTest
+namespace Wordle.CLI
 {
     class Program
     {
