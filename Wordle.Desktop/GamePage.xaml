@@ -1,14 +1,13 @@
-﻿<Page x:Class="WordleWPFClient.GamePage"
+﻿<Page x:Class="Wordle.Desktop.GamePage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-      xmlns:local="clr-namespace:WordleWPFClient"
+      xmlns:local="clr-namespace:Wordle.Desktop"
       mc:Ignorable="d" 
       d:DesignHeight="680" d:DesignWidth="520"
-      Title="GamePage">
-
-    <Grid Name="MainGrid"
+      Title="Game">
+    <Grid x:Name="MainGrid"
           Width="300">
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
@@ -21,7 +20,12 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
-        <Button Content="Replay"
+        <Button Name="FakeButton"
+                Height="0"
+                Width="0"/>
+        <Button Name="ReplayButton" 
+                Content="Replay"
+                Click="ReplayButton_Click"
                 Margin="5, 10"
                 Padding="5"
                 HorizontalAlignment="Right"
@@ -29,25 +33,23 @@
                 Background="White"
                 Foreground="DodgerBlue"
                 FontSize="12"
-                BorderThickness="0"
-                Click="ReplayButton_Click"/>
-        <TextBlock x:Name="UserMessageTextBlock" 
-                   Text=""
+                BorderThickness="0"/>
+        <Label x:Name="UserMessageTextBlock" 
+                   Content=""
+                   VerticalContentAlignment="Center"
                    FontSize="14"
                    HorizontalAlignment="Center"
                    VerticalAlignment="Top"
                    Grid.Row="3"
-                   MinHeight="60"/>
-        <StackPanel x:Name="WordleGamePanel"
+                   MinHeight="70"/>
+        <StackPanel x:Name="GamePanel"
                     Grid.Row="4"></StackPanel>
         <Button Content="Enter"
-                Margin="5, 10"
-                Padding="5"
+                Click="SubmitButton_Click"
+                Margin="5,10"
+                Padding="10,5"
                 HorizontalAlignment="Right"
                 Grid.Row="5"
-                Background="DodgerBlue"
-                Foreground="White"
-                FontSize="18"
-                Click="SubmitButton_Click"/>
+                FontSize="18"/>
     </Grid>
 </Page>

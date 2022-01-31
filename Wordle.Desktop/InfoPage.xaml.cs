@@ -11,14 +11,14 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace WordleWPFClient
+namespace Wordle.Desktop
 {
     /// <summary>
-    /// Interaction logic for Page1.xaml
+    /// Interaction logic for InfoPage.xaml
     /// </summary>
-    public partial class UserAnalyticsPage : Page
+    public partial class InfoPage : Page
     {
-        public UserAnalyticsPage()
+        public InfoPage()
         {
             InitializeComponent();
         }

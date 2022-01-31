@@ -10,20 +10,17 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Wordle;
 
-namespace WordleWPFClient
+namespace Wordle.Desktop
 {
     /// <summary>
-    /// Interaction logic for Page1.xaml
+    /// Interaction logic for SettingsPage.xaml
     /// </summary>
-    public partial class GamePage2 : Page
+    public partial class SettingsPage : Page
     {
-        public Game game;
-        public GamePage2()
+        public SettingsPage()
         {
             InitializeComponent();
-            //game = new Game(App.WordsDbPath);
         }
     }
 }
