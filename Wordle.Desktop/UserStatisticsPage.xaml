@@ -11,11 +11,10 @@
     <Grid>
         <StackPanel>
             <Label Content="User Statistics"
-               FontSize="20"
-               HorizontalAlignment="Center"/>
+               FontSize="16"
+               HorizontalAlignment="Left"/>
             <Grid x:Name="UserStatsGrid">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>

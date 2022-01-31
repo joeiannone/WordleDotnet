@@ -36,7 +36,7 @@ namespace Wordle.Desktop
             if (GameGrid != null)
                 GameGrid.Children.Clear();
             BuildWordleGrid();
-            UserMessageTextBlock.Content = game.CurrentSecretWord;
+            //UserMessageTextBlock.Content = game.CurrentSecretWord;
             ActiveColumn = 0;
 
             this.KeyUp -= Page_KeyUp;
