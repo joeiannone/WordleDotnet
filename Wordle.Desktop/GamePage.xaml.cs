@@ -36,7 +36,7 @@ namespace Wordle.Desktop
             if (GameGrid != null)
                 GameGrid.Children.Clear();
             BuildWordleGrid();
-            //UserMessageTextBlock.Content = game.CurrentSecretWord;
+            UserMessageTextBlock.Content = "";
             ActiveColumn = 0;
 
             this.KeyUp -= Page_KeyUp;
@@ -128,6 +128,8 @@ namespace Wordle.Desktop
 
         private void SubmitGuess()
         {
+            UserMessageTextBlock.Content = "";
+
             if (game.wordFound || game.CurrentRowPosition == game.COLUMNS + 1)
                 return;
 
