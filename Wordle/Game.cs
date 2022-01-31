@@ -163,7 +163,7 @@ namespace Wordle
             List<UserStats> userStatsList = new List<UserStats>();
             using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
             {
-                userStatsList = connection.Table<UserStats>().OrderByDescending(t => t.GuessCount).OrderByDescending(t => t.TimeSpan).Take(top).ToList();
+                userStatsList = connection.Table<UserStats>().Where(t => t.SolutionFound == true).OrderByDescending(t => t.GuessCount).OrderByDescending(t => t.TimeSpan).Take(top).ToList();
                 //userStatsList = connection.Table<UserStats>().ToList();
             }
             userStatsList.Reverse();

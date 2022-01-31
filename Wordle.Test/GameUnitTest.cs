@@ -111,7 +111,6 @@ namespace WordleTests
             catch (InvalidOperationException ex)
             {
                 Assert.AreEqual(ex.Message, "Word not found in database.");
-               
             }
 
             
