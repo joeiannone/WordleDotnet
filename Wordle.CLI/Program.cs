@@ -16,16 +16,30 @@ namespace Wordle.CLI
     {
         static void Main(string[] args)
         {
+            string cmd = "";
 
-            Game game = new Game(6);
-            Console.WriteLine(game.CurrentSecretWord);
-            ValidatedWord guess = game.ValidateWord("tasks");
-            ValidatedWord guessResult = game.Guess(guess);
-
-            foreach (KeyValuePair<string, LetterState> kvp in guessResult.LetterStates)
+            try
             {
-                Console.WriteLine("Key = {0}, Value = {1}", kvp.Key, kvp.Value);
+                cmd = args[0];
             }
+            catch (IndexOutOfRangeException ex)
+            {
+
+            }
+
+            switch (cmd)
+            {
+                case "play":
+                    GameController gameController = new GameController();
+                    break;
+                case "stats":
+                    UserStatsController userStatsController = new UserStatsController();
+                    break;
+                default:
+                    Console.WriteLine("\nList commands and options\n...\n");
+                    break;
+            }
+            
         }
     }
 }
