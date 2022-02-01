@@ -29,13 +29,37 @@ namespace Wordle.CLI
             {
                 ValidatedWord guess = game.ValidateWord(guessStr);
                 ValidatedWord guessResult = game.Guess(guess);
-                Console.WriteLine($"\n{guessResult.LetterStatesToString()}");
+
+                Console.WriteLine("");
+                int i = 0;
+                foreach (char c in guessResult.ToString().ToCharArray())
+                {
+                    switch (guessResult.LetterStates[$"{game.CurrentRowPosition}{i}"])
+                    {
+                        case Word.LetterState.inWord:
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            break;
+                        case Word.LetterState.notInWord:
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            break;
+                        case Word.LetterState.isCorrect:
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            break;
+                    }
+                    Console.Write($"{guessResult.ToString().ToCharArray()[i].ToString().ToUpper()} ");
+                    i++;
+                }
+
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("\n");
                 game.IncrementRowPosition();
 
             }
             catch (InvalidOperationException ex)
             {
-                Console.WriteLine(ex.Message);
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine($"\n{ex.Message}\nTry again.\n");
+                Console.ForegroundColor = ConsoleColor.White;
             }
 
 
