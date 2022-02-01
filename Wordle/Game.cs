@@ -19,7 +19,7 @@ namespace Wordle
          * 
          */
         private static string CurrentDirectory = Environment.CurrentDirectory.ToString();
-        private static string AppDataFolderPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Wordle\\Data");
+        private static string AppDataFolderPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Wordle/Data");
         private static string DBConnectionString = System.IO.Path.Combine(AppDataFolderPath, "Wordle.db");
 
         public int COLUMNS { get; } = 5;
@@ -232,7 +232,7 @@ namespace Wordle
              * Parse words from json file 
              */
             List<Word> Words = new List<Word>();
-            using (StreamReader file = File.OpenText(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Static\\five-letter-words.json")))
+            using (StreamReader file = File.OpenText(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Static/five-letter-words.json")))
             {
                 string json = file.ReadToEnd();
                 List<string> wordList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(json);
