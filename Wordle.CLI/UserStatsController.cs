@@ -8,6 +8,7 @@ namespace Wordle.CLI
     class UserStatsController
     {
         private Game game;
+        private ConsoleColor defaultConsoleForeground = Console.ForegroundColor;
 
         public UserStatsController()
         {
@@ -30,7 +31,7 @@ namespace Wordle.CLI
                 Console.WriteLine($"{u.Word}  {u.GuessCount}  {u.TimeSpan}  {u.StartTime.ToString("d")}");
             }
             Console.WriteLine("");
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = defaultConsoleForeground;
         }
     }
 }

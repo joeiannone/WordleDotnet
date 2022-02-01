@@ -8,6 +8,7 @@ namespace Wordle.CLI
     class GameController
     {
         private Game game;
+        private ConsoleColor defaultConsoleForeground = Console.ForegroundColor;
 
         public GameController(int rows = 6)
         {
@@ -49,8 +50,7 @@ namespace Wordle.CLI
                     Console.Write($"{guessResult.ToString().ToCharArray()[i].ToString().ToUpper()} ");
                     i++;
                 }
-
-                Console.ForegroundColor = ConsoleColor.White;
+                
                 Console.WriteLine("\n");
                 game.IncrementRowPosition();
 
@@ -59,8 +59,9 @@ namespace Wordle.CLI
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine($"\n{ex.Message}\nTry again.\n");
-                Console.ForegroundColor = ConsoleColor.White;
             }
+
+            Console.ForegroundColor = defaultConsoleForeground;
 
 
         }
@@ -78,6 +79,7 @@ namespace Wordle.CLI
                 guess = Console.ReadLine();
 
                 SubmitGuess(guess);
+                
             }
 
             if (game.wordFound)
