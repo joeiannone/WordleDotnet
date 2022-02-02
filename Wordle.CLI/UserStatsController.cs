@@ -24,10 +24,13 @@ namespace Wordle.CLI
             Console.WriteLine("-----  -  ---------------------------");
             foreach (UserStats u in stats)
             {
-                if (u.GuessCount <= 4)
+                if (u.GuessCount <= 3)
                     Console.ForegroundColor = ConsoleColor.Green;
-                else
+                else if (u.GuessCount <= 5)
                     Console.ForegroundColor = ConsoleColor.Yellow;
+                else
+                    Console.ForegroundColor = defaultConsoleForeground;
+
                 Console.WriteLine($"{u.Word}  {u.GuessCount}  {u.TimeSpan}  {u.StartTime.ToString("d")}");
             }
             Console.WriteLine("");
