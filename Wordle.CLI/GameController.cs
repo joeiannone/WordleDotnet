@@ -7,14 +7,18 @@ namespace Wordle.CLI
 {
     class GameController
     {
+
+
         private Game game;
         private List<ValidatedWord> Guesses;
         private ConsoleColor defaultConsoleForeground = Console.ForegroundColor;
+
 
         public GameController(int rows = 6)
         {
             Init(rows);
         }
+
 
         private void Init(int rows)
         {
@@ -22,6 +26,7 @@ namespace Wordle.CLI
             Guesses = new List<ValidatedWord>();
             Prompt();
         }
+
 
         private void SubmitGuess(string guessStr)
         {
@@ -33,57 +38,32 @@ namespace Wordle.CLI
                 ValidatedWord guess = game.ValidateWord(guessStr);
                 ValidatedWord guessResult = game.Guess(guess);
                 Guesses.Add(guessResult);
-
-                Console.WriteLine("");
-                int row = 0;
-                foreach (ValidatedWord g in Guesses)
-                {
-                    int col = 0;
-                    foreach (char c in g.ToString().ToCharArray())
-                    {
-                        switch (g.LetterStates[$"{row}{col}"])
-                        {
-                            case Word.LetterState.inWord:
-                                Console.ForegroundColor = ConsoleColor.Yellow;
-                                break;
-                            case Word.LetterState.notInWord:
-                                Console.ForegroundColor = ConsoleColor.Gray;
-                                break;
-                            case Word.LetterState.isCorrect:
-                                Console.ForegroundColor = ConsoleColor.Green;
-                                break;
-                        }
-                        Console.Write($"{g.ToString().ToCharArray()[col].ToString().ToUpper()} ");
-                        col++;
-                    }
-                    row++;
-                    Console.WriteLine("");
-                }
-                Console.WriteLine("");
                 game.IncrementRowPosition();
 
             }
             catch (InvalidOperationException ex)
             {
                 Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine($"\n{ex.Message}\nTry again.\n");
+                Console.WriteLine($"\n{ex.Message}\nTry again.");
             }
 
+            DisplayWordGrid();
+
             Console.ForegroundColor = defaultConsoleForeground;
-
-
         }
+
 
         private void Prompt()
         {
             string guess;
-            Console.WriteLine("\nBegin:\n");
+            Console.WriteLine("\nWELCOME TO WORDLE\n");
 
             while (game.CurrentRowPosition < game.Rows)
             {
                 if (game.wordFound)
                     break;
 
+                Console.Write("Guess: ");
                 guess = Console.ReadLine();
 
                 SubmitGuess(guess);
@@ -98,9 +78,37 @@ namespace Wordle.CLI
             {
                 Console.WriteLine($"\nBetter luck next time.\n\nThe word was {game.CurrentSecretWord.ToString()}...\n");
             }
-            
+        }
 
 
+        private void DisplayWordGrid()
+        {
+            Console.WriteLine("");
+            int row = 0;
+            foreach (ValidatedWord g in Guesses)
+            {
+                int col = 0;
+                foreach (char c in g.ToString().ToCharArray())
+                {
+                    switch (g.LetterStates[$"{row}{col}"])
+                    {
+                        case Word.LetterState.inWord:
+                            Console.ForegroundColor = ConsoleColor.Yellow;
+                            break;
+                        case Word.LetterState.notInWord:
+                            Console.ForegroundColor = ConsoleColor.Gray;
+                            break;
+                        case Word.LetterState.isCorrect:
+                            Console.ForegroundColor = ConsoleColor.Green;
+                            break;
+                    }
+                    Console.Write($"{g.ToString().ToCharArray()[col].ToString().ToUpper()} ");
+                    col++;
+                }
+                row++;
+                Console.WriteLine("");
+            }
+            Console.WriteLine("");
         }
     }
 }

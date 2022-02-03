@@ -1,14 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Resources;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using SQLite;
-using Wordle;
-using Wordle.Models;
-using static System.Net.Mime.MediaTypeNames;
-using static Wordle.Models.Word;
 
 namespace Wordle.CLI
 {
@@ -17,14 +8,21 @@ namespace Wordle.CLI
         static void Main(string[] args)
         {
             string cmd = "";
+            List<string> options = new List<string>();
 
             try
             {
-                cmd = args[0];
+                cmd = args[0].ToLower();
+
+                foreach (string arg in args)
+                {
+                    // TODO: parse out options if any
+                }
+
             }
             catch (IndexOutOfRangeException ex)
             {
-
+                DisplayHelpOptions();
             }
 
             switch (cmd)
@@ -36,10 +34,15 @@ namespace Wordle.CLI
                     UserStatsController userStatsController = new UserStatsController();
                     break;
                 default:
-                    Console.WriteLine("\nList commands and options\n...\n");
+                    DisplayHelpOptions();
                     break;
             }
             
+        }
+
+        static void DisplayHelpOptions()
+        {
+            Console.WriteLine("TODO: List commands and options");
         }
     }
 }
