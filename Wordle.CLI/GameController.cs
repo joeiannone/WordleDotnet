@@ -8,6 +8,7 @@ namespace Wordle.CLI
     class GameController
     {
         private Game game;
+        private List<ValidatedWord> Guesses;
         private ConsoleColor defaultConsoleForeground = Console.ForegroundColor;
 
         public GameController(int rows = 6)
@@ -18,6 +19,7 @@ namespace Wordle.CLI
         private void Init(int rows)
         {
             game = new Game(rows);
+            Guesses = new List<ValidatedWord>();
             Prompt();
         }
 
@@ -30,28 +32,34 @@ namespace Wordle.CLI
             {
                 ValidatedWord guess = game.ValidateWord(guessStr);
                 ValidatedWord guessResult = game.Guess(guess);
+                Guesses.Add(guessResult);
 
                 Console.WriteLine("");
-                int i = 0;
-                foreach (char c in guessResult.ToString().ToCharArray())
+                int row = 0;
+                foreach (ValidatedWord g in Guesses)
                 {
-                    switch (guessResult.LetterStates[$"{game.CurrentRowPosition}{i}"])
+                    int col = 0;
+                    foreach (char c in g.ToString().ToCharArray())
                     {
-                        case Word.LetterState.inWord:
-                            Console.ForegroundColor = ConsoleColor.Yellow;
-                            break;
-                        case Word.LetterState.notInWord:
-                            Console.ForegroundColor = ConsoleColor.Gray;
-                            break;
-                        case Word.LetterState.isCorrect:
-                            Console.ForegroundColor = ConsoleColor.Green;
-                            break;
+                        switch (g.LetterStates[$"{row}{col}"])
+                        {
+                            case Word.LetterState.inWord:
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                break;
+                            case Word.LetterState.notInWord:
+                                Console.ForegroundColor = ConsoleColor.Gray;
+                                break;
+                            case Word.LetterState.isCorrect:
+                                Console.ForegroundColor = ConsoleColor.Green;
+                                break;
+                        }
+                        Console.Write($"{g.ToString().ToCharArray()[col].ToString().ToUpper()} ");
+                        col++;
                     }
-                    Console.Write($"{guessResult.ToString().ToCharArray()[i].ToString().ToUpper()} ");
-                    i++;
+                    row++;
+                    Console.WriteLine("");
                 }
-                
-                Console.WriteLine("\n");
+                Console.WriteLine("");
                 game.IncrementRowPosition();
 
             }
