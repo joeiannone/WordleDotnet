@@ -39,6 +39,7 @@ namespace Wordle.Desktop
             UserMessageTextBlock.Content = "";
             ActiveColumn = 0;
 
+            // make sure to remove before recreating key up listener
             this.KeyUp -= Page_KeyUp;
             this.KeyUp += Page_KeyUp;
 
@@ -94,9 +95,10 @@ namespace Wordle.Desktop
                     textBox.Height = 50;
                     textBox.Margin = new Thickness(2);
                     textBox.Padding = new Thickness(2);
-                    textBox.Background = Brushes.AliceBlue;
+                    //textBox.Background = Brushes.AliceBlue;
                     textBox.Name = $"x{i}x{j}";
-
+                    textBox.BorderThickness = new Thickness(1);
+                    textBox.BorderBrush = (Brush)BC.ConvertFrom("#D3D6dA");
 
                     if (j > 0)
                         textBox.SetValue(Grid.ColumnProperty, j);
@@ -106,7 +108,7 @@ namespace Wordle.Desktop
                     if (i != game.CurrentRowPosition)
                     {
                         textBox.IsEnabled = false;
-                        textBox.Background = (Brush)BC.ConvertFrom("#D3D6dA");
+                        //textBox.Background = (Brush)BC.ConvertFrom("#D3D6dA");
                     }
 
                     textBox.HorizontalContentAlignment = HorizontalAlignment.Center;
@@ -198,7 +200,8 @@ namespace Wordle.Desktop
             for (int col = 0; col < game.COLUMNS; col++)
             {
                 Label textBox = TextBoxes[$"x{game.CurrentRowPosition}x{col}"];
-                textBox.Background = Brushes.AliceBlue;
+                //textBox.Background = Brushes.AliceBlue;
+                textBox.BorderBrush = (Brush)BC.ConvertFrom("#D3D6dA");
                 textBox.IsEnabled = true;
             }
         }
@@ -228,7 +231,8 @@ namespace Wordle.Desktop
                     activeTextBox = TextBoxes[$"x{game.CurrentRowPosition}x{ActiveColumn}"];
                 }
                 activeTextBox.Content = null;
-                activeTextBox.BorderThickness = new Thickness(0);
+                //activeTextBox.BorderThickness = new Thickness(1);
+                activeTextBox.BorderBrush = (Brush)BC.ConvertFrom("#D3D6dA");
             }
 
 
