@@ -1,10 +1,8 @@
 ﻿using SQLite;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Reflection;
 using System.Threading.Tasks;
+using Wordle.Interfaces;
 using Wordle.Models;
 
 namespace Wordle
@@ -12,15 +10,10 @@ namespace Wordle
     /**
      * Game ViewModel
      */
-    public class Game : IDisposable
+    public class Game : IWordleComponent, IDisposable
     {
-        /**
-         * 
-         * 
-         */
-        private static string CurrentDirectory = Environment.CurrentDirectory.ToString();
-        private static string AppDataFolderPath = System.IO.Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Wordle/Data");
-        private static string DBConnectionString = System.IO.Path.Combine(AppDataFolderPath, "Wordle.db");
+
+        private string DBConnectionString;
 
         public int COLUMNS { get; } = 5;
         public int Rows;
@@ -34,8 +27,9 @@ namespace Wordle
         public UserStats GameStats { get; set; }
 
 
-        public Game(int rows = 6)
+        public Game(string dbConnectionString, int rows = 6)
         {
+            DBConnectionString = dbConnectionString;
             Init(rows);
         }
 
@@ -45,7 +39,6 @@ namespace Wordle
          */
         private void Init(int rows = 6)
         {
-            BuildDatabase();
             Rows = rows;
             CurrentSecretWord = Word.CreateWord(GenerateRandomWord());
             StartTime = DateTime.Now;
@@ -158,18 +151,6 @@ namespace Wordle
             }
         }
 
-        public Task<List<UserStats>> GetUserStatsAsync(int top = 20)
-        {
-            List<UserStats> userStatsList = new List<UserStats>();
-            using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
-            {
-                userStatsList = connection.Table<UserStats>().Where(t => t.SolutionFound == true).OrderByDescending(t => t.GuessCount).OrderByDescending(t => t.TimeSpan).Take(top).ToList();
-                //userStatsList = connection.Table<UserStats>().ToList();
-            }
-            userStatsList.Reverse();
-            return Task.FromResult(userStatsList);
-        }
-
 
         /**
          * 
@@ -212,43 +193,6 @@ namespace Wordle
                 IsValid = isValid,
                 ValidationMessages = validationMessages
             };
-        }
-
-        public void BuildDatabase()
-        {
-
-            // return if file exists and not empty
-            if (File.Exists(DBConnectionString))
-            {
-                FileInfo fileinfo = new FileInfo(DBConnectionString);
-                if (fileinfo.Length != 0)
-                    return;
-            }
-            Console.WriteLine("\nCreating file...\n");
-            // create app data directory for sqlite file
-            System.IO.Directory.CreateDirectory(AppDataFolderPath);
-
-            /**
-             * Parse words from json file 
-             */
-            List<Word> Words = new List<Word>();
-            using (StreamReader file = File.OpenText(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Static/five-letter-words.json")))
-            {
-                string json = file.ReadToEnd();
-                List<string> wordList = Newtonsoft.Json.JsonConvert.DeserializeObject<List<string>>(json);
-                Words = wordList.ConvertAll(wordStr => Word.CreateWord(wordStr));
-            }
-
-            /**
-             * Create/populate database
-             */
-            using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
-            {
-                connection.DropTable<Word>();
-                connection.CreateTable<Word>();
-                connection.CreateTable<UserStats>();
-                connection.InsertAll(Words);
-            }
         }
 
         public string GetTimespanDisplayString()

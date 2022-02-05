@@ -7,6 +7,9 @@ namespace Wordle.CLI
     {
         static void Main(string[] args)
         {
+
+            WordleFactory wordleFactory = new WordleFactory();
+
             string cmd = "";
             List<string> options = new List<string>();
 
@@ -28,10 +31,12 @@ namespace Wordle.CLI
             switch (cmd)
             {
                 case "play":
-                    GameController gameController = new GameController();
+                    GameController gameController = new GameController(
+                        (Game)wordleFactory.GetWordleComponent("Game"));
                     break;
                 case "stats":
-                    UserStatsController userStatsController = new UserStatsController();
+                    UserStatsController userStatsController = new UserStatsController(
+                        (UserStatsService)wordleFactory.GetWordleComponent("UserStats"));
                     break;
                 default:
                     DisplayHelpOptions();

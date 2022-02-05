@@ -12,11 +12,14 @@ namespace WordleTests
     public class GameUnitTest
     {
         private Game game;
+        private UserStatsService userStats;
 
         [SetUp]
         public void SetUp()
         {
-            game = new Game();
+            WordleFactory wordle = new WordleFactory();
+            game = (Game)wordle.GetWordleComponent("Game");
+            userStats = (UserStatsService)wordle.GetWordleComponent("UserStats");
         }
 
         [Test]
@@ -119,9 +122,9 @@ namespace WordleTests
         [Test]
         public async Task TestGetUserStatsAsync()
         {
-            List<UserStats> userStats = await game.GetUserStatsAsync();
-            Console.WriteLine($"Records found: {userStats.Count}");
-            foreach (UserStats us in userStats)
+            List<UserStats> stats = await userStats.GetUserStatsAsync();
+            Console.WriteLine($"Records found: {stats.Count}");
+            foreach (UserStats us in stats)
             {
                 Console.WriteLine($"{us.Word} - {us.TimeSpan.ToString()} - {us.GuessCount}");
             }
