@@ -20,13 +20,25 @@ namespace Wordle.CLI
             List<UserStats> stats = await userStatsService.GetUserStatsAsync();
             int gamesPlayed = await userStatsService.GetGamesPlayedAsync();
             double winPercentage = await userStatsService.GetWinPercentageAsync();
-            
-            Console.WriteLine("\nUSER STATS:");
+            int currentStreak = await userStatsService.GetCurrentStreakAsync();
+            int maxStreak = await userStatsService.GetMaxStreakAsync();
 
-            Console.WriteLine("-------------------------------------");
-            Console.WriteLine($"Games played: {gamesPlayed}");
-            Console.WriteLine($"Win percentage: {winPercentage}%");
-            Console.WriteLine("-------------------------------------");
+            var t = await userStatsService.GetGuessDistributionAsync();
+            foreach(KeyValuePair<int, int> d in t)
+            {
+                Console.WriteLine($"{d.Key} : {d.Value}");
+            }
+
+            Console.WriteLine("\nUSER STATS:");
+            Console.WriteLine("--------------------------------------");
+            Console.WriteLine();
+            Console.WriteLine($"Games played:       {gamesPlayed}");
+            Console.WriteLine($"Win percentage:     {winPercentage}%");
+            Console.WriteLine($"Current streak:     {currentStreak}");
+            Console.WriteLine($"Max streak:         {maxStreak}");
+            Console.WriteLine();
+            Console.WriteLine("TOP 20");
+            Console.WriteLine("--------------------------------------");
             foreach (UserStats u in stats)
             {
                 if (u.GuessCount <= 3)
@@ -36,7 +48,7 @@ namespace Wordle.CLI
                 else
                     Console.ForegroundColor = defaultConsoleForeground;
 
-                Console.WriteLine($"{u.Word}  {u.GuessCount}  {u.TimeSpan}  {u.StartTime.ToString("d")}");
+                Console.WriteLine($"{u.Word}  {u.GuessCount}  {u.TimeSpan}  {u.StartTime.ToString("yyyy-MM-dd")}");
             }
             Console.WriteLine("");
             Console.ForegroundColor = defaultConsoleForeground;
