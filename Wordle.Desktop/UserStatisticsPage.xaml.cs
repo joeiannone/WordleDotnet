@@ -1,17 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Wordle.Models;
 
 namespace Wordle.Desktop
@@ -21,20 +12,22 @@ namespace Wordle.Desktop
     /// </summary>
     public partial class UserStatisticsPage : Page
     {
+        private UserStatsService userStats;
         public UserStatisticsPage()
         {
             InitializeComponent();
             Loaded += Page_Loaded;
-            
+
+            WordleFactory wordle = new WordleFactory();
+            userStats = (UserStatsService)wordle.GetWordleComponent("UserStats");
         }
 
         public async Task LoadUserStats()
         {
 
             UserStatsGrid.Children.Clear();
-            Game game = new Game();
-            //UserStatisticsDataGrid.ItemsSource = await game.GetUserStatsAsync(20);
-            List<UserStats> userStatsList = await game.GetUserStatsAsync(20);
+            List<UserStats> userStatsList = await userStats.GetUserStatsAsync(20);
+
             Label h1 = new Label();
             Label h2 = new Label();
             Label h3 = new Label();

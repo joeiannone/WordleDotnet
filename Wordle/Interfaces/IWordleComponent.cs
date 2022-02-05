@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Wordle
+namespace Wordle.Interfaces
 {
-    class SettingsController
+    public interface IWordleComponent
     {
     }
 }

@@ -32,7 +32,9 @@ namespace Wordle.Desktop
 
         private void InitGame()
         {
-            game = new Game();
+            WordleFactory wordle = new WordleFactory();
+            game = (Game)wordle.GetWordleComponent("Game");
+
             if (GameGrid != null)
                 GameGrid.Children.Clear();
             BuildWordleGrid();

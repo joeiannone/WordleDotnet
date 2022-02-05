@@ -14,15 +14,15 @@ namespace Wordle.CLI
         private ConsoleColor defaultConsoleForeground = Console.ForegroundColor;
 
 
-        public GameController(int rows = 6)
+        public GameController(Game game, int rows = 6)
         {
+            this.game = game;
             Init(rows);
         }
 
 
         private void Init(int rows)
         {
-            game = new Game(rows);
             Guesses = new List<ValidatedWord>();
             Prompt();
         }

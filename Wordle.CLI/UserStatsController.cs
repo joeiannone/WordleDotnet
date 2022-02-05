@@ -1,27 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Wordle.Models;
 
 namespace Wordle.CLI
 {
     class UserStatsController
     {
-        private Game game;
+        private UserStatsService userStatsService;
         private ConsoleColor defaultConsoleForeground = Console.ForegroundColor;
 
-        public UserStatsController()
+        public UserStatsController(UserStatsService userStats)
         {
-            game = new Game();
+            userStatsService = userStats;
             PrintTopStatsAsync();
         }
 
         public async void PrintTopStatsAsync()
         {
-            List<UserStats> stats = await game.GetUserStatsAsync();
+            List<UserStats> stats = await userStatsService.GetUserStatsAsync();
+            int gamesPlayed = await userStatsService.GetGamesPlayedAsync();
+            double winPercentage = await userStatsService.GetWinPercentageAsync();
             
             Console.WriteLine("\nUSER STATS:");
-            Console.WriteLine("-----  -  ---------------------------");
+
+            Console.WriteLine("-------------------------------------");
+            Console.WriteLine($"Games played: {gamesPlayed}");
+            Console.WriteLine($"Win percentage: {winPercentage}%");
+            Console.WriteLine("-------------------------------------");
             foreach (UserStats u in stats)
             {
                 if (u.GuessCount <= 3)
