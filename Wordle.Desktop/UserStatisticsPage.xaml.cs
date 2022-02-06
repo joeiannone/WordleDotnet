@@ -12,21 +12,27 @@ namespace Wordle.Desktop
     /// </summary>
     public partial class UserStatisticsPage : Page
     {
-        private UserStatsService userStats;
+        private UserStatsService userStatsService;
         public UserStatisticsPage()
         {
             InitializeComponent();
             Loaded += Page_Loaded;
 
             WordleFactory wordle = new WordleFactory();
-            userStats = (UserStatsService)wordle.GetWordleComponent("UserStats");
+            userStatsService = (UserStatsService)wordle.GetWordleComponent("UserStats");
         }
 
         public async Task LoadUserStats()
         {
 
             UserStatsGrid.Children.Clear();
-            List<UserStats> userStatsList = await userStats.GetUserStatsAsync(20);
+            Played.Content = await userStatsService.GetGamesPlayedAsync();
+            WinPercentage.Content = await userStatsService.GetWinPercentageAsync();
+            CurrentStreak.Content = await userStatsService.GetCurrentStreakAsync();
+            MaxStreak.Content = await userStatsService.GetMaxStreakAsync();
+
+            List<UserStats> userStatsList = await userStatsService.GetUserStatsAsync(10);
+
 
             Label h1 = new Label();
             Label h2 = new Label();
