@@ -36,7 +36,13 @@ namespace Wordle.Desktop
             game = (Game)wordle.GetWordleComponent("Game");
 
             if (GameGrid != null)
+            {
+                // clear anything created dynamically
                 GameGrid.Children.Clear();
+                GameGrid.RowDefinitions.Clear();
+                GameGrid.ColumnDefinitions.Clear();
+            }
+                
             BuildWordleGrid();
             UserMessageTextBlock.Content = "";
             ActiveColumn = 0;

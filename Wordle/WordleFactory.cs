@@ -10,7 +10,7 @@ namespace Wordle
 {
     /**
      * Factory class for all components involved in Wordle so we can easily inject the DB variables
-     * into the respective classes and run any DB initialization processes.
+     * into the respective classes.
      * 
      */
     public class WordleFactory
