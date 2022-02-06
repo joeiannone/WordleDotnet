@@ -6,13 +6,84 @@
       xmlns:local="clr-namespace:Wordle.Desktop"
       mc:Ignorable="d" 
       d:DesignHeight="450" d:DesignWidth="800"
-      Title="Page1">
+      Title="Statistics">
+    <Page.Resources>
+        <Style TargetType="Label" x:Key="StatsLabelValueStyle">
+            <Setter Property="FontSize" Value="32"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+        <Style TargetType="Label" x:Key="StatsMainLabelStyle">
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+        </Style>
+    </Page.Resources>
+    <Grid MaxWidth="460">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Content="Statistics" 
+               Grid.Row="0"
+               Grid.Column="0"
+               Style="{StaticResource StatsMainLabelStyle}"/>
+        <Grid Grid.Row="1" Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Column="0">
+                <Label Name="Played" 
+                       Style="{StaticResource StatsLabelValueStyle}"/>
+                <Label Content="Played" HorizontalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Grid.Column="1">
+                <Label Name="WinPercentage" 
+                       Style="{StaticResource StatsLabelValueStyle}"/>
+                <Label Content="Win %" HorizontalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Grid.Column="2">
+                <Label Name="CurrentStreak"
+                       Style="{StaticResource StatsLabelValueStyle}"/>
+                <Label Content="Current Streak" HorizontalAlignment="Center"/>
+            </StackPanel>
+            <StackPanel Grid.Column="3">
+                <Label Name="MaxStreak" 
+                       Style="{StaticResource StatsLabelValueStyle}"/>
+                <Label Content="Max Streak" HorizontalAlignment="Center"/>
+            </StackPanel>
+        </Grid>
+        <Label Content="Guess Distribution" 
+               Grid.Row="2"
+               Style="{StaticResource StatsMainLabelStyle}"/>
+        <Grid Name="GuessDistributionGrid" 
+              Grid.Row="3"
+              HorizontalAlignment="Center"
+              Margin="0,0,0,10">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-    <Grid>
-        <StackPanel>
-            <Label Content="User Statistics"
-               FontSize="16"
-               HorizontalAlignment="Left"/>
+        </Grid>
+        <Label Content="" 
+               Grid.Row="4"
+               Grid.Column="0"
+               Style="{StaticResource StatsMainLabelStyle}"/>
+        <StackPanel Grid.Row="5" 
+                    Grid.Column="0"
+                    HorizontalAlignment="Center">
             <Grid x:Name="UserStatsGrid">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>

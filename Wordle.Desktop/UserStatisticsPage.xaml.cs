@@ -12,21 +12,54 @@ namespace Wordle.Desktop
     /// </summary>
     public partial class UserStatisticsPage : Page
     {
-        private UserStatsService userStats;
+        private UserStatsService userStatsService;
         public UserStatisticsPage()
         {
             InitializeComponent();
             Loaded += Page_Loaded;
 
             WordleFactory wordle = new WordleFactory();
-            userStats = (UserStatsService)wordle.GetWordleComponent("UserStats");
+            userStatsService = (UserStatsService)wordle.GetWordleComponent("UserStats");
         }
 
         public async Task LoadUserStats()
         {
 
             UserStatsGrid.Children.Clear();
-            List<UserStats> userStatsList = await userStats.GetUserStatsAsync(20);
+            Played.Content = await userStatsService.GetGamesPlayedAsync();
+            WinPercentage.Content = await userStatsService.GetWinPercentageAsync();
+            CurrentStreak.Content = await userStatsService.GetCurrentStreakAsync();
+            MaxStreak.Content = await userStatsService.GetMaxStreakAsync();
+
+            Dictionary<int, int> guessDistributions = await userStatsService.GetGuessDistributionAsync();
+            GuessDistributionGrid.Children.Clear();
+            GuessDistributionGrid.RowDefinitions.Clear();
+            // making sure this outputs in order of key (number of guesses)
+            for (int i = 1; i < guessDistributions.Count + 1; i++)
+            {
+                if (guessDistributions.ContainsKey(i))
+                {
+                    RowDefinition row = new RowDefinition();
+                    Label kLabel = new Label();
+                    Label vLabel = new Label();
+                    kLabel.Content = $"{i}   ---->";
+                    kLabel.SetValue(Grid.RowProperty, i-1);
+                    kLabel.SetValue(Grid.ColumnProperty, 0);
+                    //kLabel.Padding = new Thickness { Bottom = 0, Left = 2 };
+                    vLabel.Content = guessDistributions[i];
+                    vLabel.SetValue(Grid.RowProperty, i - 1);
+                    vLabel.SetValue(Grid.ColumnProperty, 1);
+                    //vLabel.Padding = new Thickness { Bottom = 0, Left = 2 };
+                    GuessDistributionGrid.RowDefinitions.Add(row);
+                    GuessDistributionGrid.Children.Add(kLabel);
+                    GuessDistributionGrid.Children.Add(vLabel);
+                }
+            }
+
+
+            /*
+            List<UserStats> userStatsList = await userStatsService.GetUserStatsAsync(10);
+
 
             Label h1 = new Label();
             Label h2 = new Label();
@@ -84,6 +117,7 @@ namespace Wordle.Desktop
             UserStatsGrid.Children.Add(h2);
             UserStatsGrid.Children.Add(h3);
             UserStatsGrid.Children.Add(h4);
+            */
         }
 
         public string GetTimespanDisplayString(TimeSpan timespan)
