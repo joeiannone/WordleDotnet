@@ -3,23 +3,19 @@ using System.Collections.Generic;
 using Wordle;
 using Wordle.Models;
 using NUnit.Framework;
-using SQLite;
-using System.Threading.Tasks;
 
 namespace WordleTests
 {
     [TestFixture]
-    public class GameUnitTest
+    public class GameUnitTests
     {
         private Game game;
-        private UserStatsService userStats;
 
         [SetUp]
         public void SetUp()
         {
             WordleFactory wordle = new WordleFactory();
             game = (Game)wordle.GetWordleComponent("Game");
-            userStats = (UserStatsService)wordle.GetWordleComponent("UserStats");
         }
 
         [Test]
@@ -117,17 +113,6 @@ namespace WordleTests
             }
 
             
-        }
-
-        [Test]
-        public async Task TestGetUserStatsAsync()
-        {
-            List<UserStats> stats = await userStats.GetUserStatsAsync();
-            Console.WriteLine($"Records found: {stats.Count}");
-            foreach (UserStats us in stats)
-            {
-                Console.WriteLine($"{us.Word} - {us.TimeSpan.ToString()} - {us.GuessCount}");
-            }
         }
 
     }

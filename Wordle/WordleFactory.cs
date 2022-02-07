@@ -18,8 +18,15 @@ namespace Wordle
         private static string AppDataFolderPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Wordle/Data");
         private static string DBConnectionString = Path.Combine(AppDataFolderPath, "Wordle.db");
 
-        public WordleFactory()
+        public WordleFactory(string appDataFolderPath = null)
         {
+            // allow optional override
+            if (appDataFolderPath != null)
+            {
+                AppDataFolderPath = appDataFolderPath;
+                DBConnectionString = Path.Combine(AppDataFolderPath, "Wordle.db");
+            }
+                
             BuildDatabase();
         }
 
