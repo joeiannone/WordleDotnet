@@ -138,10 +138,10 @@ namespace Wordle.Desktop
 
         private void SubmitGuess()
         {
-            UserMessageTextBlock.Content = "";
-
             if (game.wordFound || game.CurrentRowPosition == game.COLUMNS + 1)
                 return;
+
+            UserMessageTextBlock.Content = "";
 
             string guessStr = "";
             for (int col = 0; col < game.COLUMNS; col++)

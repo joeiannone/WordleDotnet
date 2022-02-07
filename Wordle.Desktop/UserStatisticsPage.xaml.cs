@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using Wordle.Models;
 
 namespace Wordle.Desktop
@@ -34,6 +36,8 @@ namespace Wordle.Desktop
             Dictionary<int, int> guessDistributions = await userStatsService.GetGuessDistributionAsync();
             GuessDistributionGrid.Children.Clear();
             GuessDistributionGrid.RowDefinitions.Clear();
+
+            Random rand = new Random();
             // making sure this outputs in order of key (number of guesses)
             for (int i = 1; i < guessDistributions.Count + 1; i++)
             {
@@ -42,82 +46,24 @@ namespace Wordle.Desktop
                     RowDefinition row = new RowDefinition();
                     Label kLabel = new Label();
                     Label vLabel = new Label();
-                    kLabel.Content = $"{i}   ---->";
+                    kLabel.Content = $"{i}";
                     kLabel.SetValue(Grid.RowProperty, i-1);
                     kLabel.SetValue(Grid.ColumnProperty, 0);
-                    //kLabel.Padding = new Thickness { Bottom = 0, Left = 2 };
+                    kLabel.Margin = new Thickness { Bottom = 2, Left = 0, Top = 0, Right = 0 };
                     vLabel.Content = guessDistributions[i];
                     vLabel.SetValue(Grid.RowProperty, i - 1);
                     vLabel.SetValue(Grid.ColumnProperty, 1);
-                    //vLabel.Padding = new Thickness { Bottom = 0, Left = 2 };
+                    vLabel.Background = Brushes.DodgerBlue;
+                    vLabel.Foreground = Brushes.White;
+                    vLabel.Width = 2*UserStatsService.GetDistributionPercentage(guessDistributions[i], guessDistributions[guessDistributions.Count]);
+                    vLabel.HorizontalAlignment = HorizontalAlignment.Left;
+                    vLabel.HorizontalContentAlignment = HorizontalAlignment.Right;
+                    vLabel.Margin = new Thickness { Bottom = 2, Left = 0, Top = 0, Right = 0 };
                     GuessDistributionGrid.RowDefinitions.Add(row);
                     GuessDistributionGrid.Children.Add(kLabel);
                     GuessDistributionGrid.Children.Add(vLabel);
                 }
             }
-
-
-            /*
-            List<UserStats> userStatsList = await userStatsService.GetUserStatsAsync(10);
-
-
-            Label h1 = new Label();
-            Label h2 = new Label();
-            Label h3 = new Label();
-            Label h4 = new Label();
-
-
-            
-            for (int i = 0; i < userStatsList.Count; i++)
-            {
-                int row = i + 1;
-                RowDefinition rd = new RowDefinition();
-                UserStatsGrid.RowDefinitions.Add(rd);
-                Label word = new Label();
-                Label guesses = new Label();
-                Label ts = new Label();
-                Label date = new Label();
-
-                word.Content = userStatsList[i].Word;
-                word.SetValue(Grid.ColumnProperty, 0);
-                word.SetValue(Grid.RowProperty, row);
-
-                guesses.Content = userStatsList[i].GuessCount;
-                guesses.SetValue(Grid.ColumnProperty, 1);
-                guesses.SetValue(Grid.RowProperty, row);
-
-                ts.Content = GetTimespanDisplayString(userStatsList[i].TimeSpan);
-                ts.SetValue(Grid.ColumnProperty, 2);
-                ts.SetValue(Grid.RowProperty, row);
-
-                date.Content = userStatsList[i].StartTime.ToString("d");
-                date.SetValue(Grid.ColumnProperty, 3);
-                date.SetValue(Grid.RowProperty, row);
-
-                UserStatsGrid.Children.Add(word);
-                UserStatsGrid.Children.Add(guesses);
-                UserStatsGrid.Children.Add(ts);
-                UserStatsGrid.Children.Add(date);
-            }
-
-            h1.Content = "Word";
-            h2.Content = "Guesses";
-            h3.Content = "Timer";
-            h4.Content = "Date";
-            h2.SetValue(Grid.ColumnProperty, 1);
-            h3.SetValue(Grid.ColumnProperty, 2);
-            h4.SetValue(Grid.ColumnProperty, 3);
-            h1.FontWeight = FontWeight.FromOpenTypeWeight(700);
-            h2.FontWeight = FontWeight.FromOpenTypeWeight(700);
-            h3.FontWeight = FontWeight.FromOpenTypeWeight(700);
-            h4.FontWeight = FontWeight.FromOpenTypeWeight(700);
-
-            UserStatsGrid.RowDefinitions.Add(new RowDefinition());
-            UserStatsGrid.Children.Add(h1);
-            UserStatsGrid.Children.Add(h2);
-            UserStatsGrid.Children.Add(h3);
-            UserStatsGrid.Children.Add(h4);
-            */
         }
 
         public string GetTimespanDisplayString(TimeSpan timespan)

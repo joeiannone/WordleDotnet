@@ -2,6 +2,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Wordle.Interfaces;
@@ -116,7 +117,16 @@ namespace Wordle
             }
 
             return Task.FromResult(guessDistribution);
-        } 
+        }
+
+        /**
+         * @param dval is the distribution value
+         * @param is the max distribution value in the set
+         */
+        public static double GetDistributionPercentage(double dval, double max)
+        {
+            return (dval / max) * 100;
+        }
 
         private List<UserStats> GetAllUserStats()
         {
