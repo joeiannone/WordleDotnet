@@ -29,7 +29,7 @@ namespace Wordle.Test
         [Test]
         public async Task GetGamesPlayedTest()
         {
-            ClearTable();
+            ResetTable();
 
             int gamesPlayed;
 
@@ -42,8 +42,7 @@ namespace Wordle.Test
             userStatsList.Add(new UserStats() { Word = "test2", GuessCount = 2, SolutionFound = true });
             userStatsList.Add(new UserStats() { Word = "test3", GuessCount = 2, SolutionFound = true });
             userStatsList.Add(new UserStats() { Word = "test4", GuessCount = 1, SolutionFound = true });
-            ClearTable();
-            Insert(userStatsList);
+            ResetTable(userStatsList);
             gamesPlayed = await userStatsService.GetGamesPlayedAsync();
             Assert.AreEqual(4, gamesPlayed);
             userStatsList.Add(new UserStats() { Word = "test5", GuessCount = 6, SolutionFound = false });
@@ -51,8 +50,7 @@ namespace Wordle.Test
             userStatsList.Add(new UserStats() { Word = "test7", GuessCount = 3, SolutionFound = false });
             userStatsList.Add(new UserStats() { Word = "test8", GuessCount = 3, SolutionFound = true });
             userStatsList.Add(new UserStats() { Word = "test9", GuessCount = 3, SolutionFound = true });
-            ClearTable();
-            Insert(userStatsList);
+            ResetTable(userStatsList);
             gamesPlayed = await userStatsService.GetGamesPlayedAsync();
             Assert.AreEqual(9, gamesPlayed);
 
@@ -61,7 +59,7 @@ namespace Wordle.Test
         [Test]
         public async Task GetMaxStreakTest()
         {
-            ClearTable();
+            ResetTable(); ;
 
             int maxStreak;
 
@@ -72,8 +70,7 @@ namespace Wordle.Test
             List<UserStats> userStatsList = new List<UserStats>();
             userStatsList.Add(new UserStats() { Word = "test1", GuessCount = 3, SolutionFound = true });
             userStatsList.Add(new UserStats() { Word = "test2", GuessCount = 2, SolutionFound = true });
-            ClearTable();
-            Insert(userStatsList);
+            ResetTable(userStatsList);
             maxStreak = await userStatsService.GetMaxStreakAsync();
             Assert.AreEqual(2, maxStreak);
             userStatsList.Add(new UserStats() { Word = "test3", GuessCount = 2, SolutionFound = true });
@@ -83,27 +80,19 @@ namespace Wordle.Test
             userStatsList.Add(new UserStats() { Word = "test7", GuessCount = 3, SolutionFound = false });
             userStatsList.Add(new UserStats() { Word = "test8", GuessCount = 3, SolutionFound = true });
             userStatsList.Add(new UserStats() { Word = "test9", GuessCount = 3, SolutionFound = true });
-            ClearTable();
-            Insert(userStatsList);
+            ResetTable(userStatsList);
             maxStreak = await userStatsService.GetMaxStreakAsync();
             Assert.AreEqual(4, maxStreak);
         }
 
-        private void ClearTable()
+        private void ResetTable(List<UserStats> userStatsList = null)
         {
-            // setup test data
             using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
             {
                 connection.DropTable<UserStats>();
                 connection.CreateTable<UserStats>();
-            }
-        }
-
-        private void Insert(List<UserStats> userStatsList)
-        {
-            using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
-            {
-                connection.InsertAll(userStatsList);
+                if (userStatsList != null)
+                    connection.InsertAll(userStatsList);
             }
         }
     }
