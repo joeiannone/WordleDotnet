@@ -4,7 +4,7 @@ using Wordle;
 using Wordle.Models;
 using NUnit.Framework;
 
-namespace WordleTests
+namespace Wordle.Test
 {
     [TestFixture]
     public class GameUnitTests
