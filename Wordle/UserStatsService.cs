@@ -36,7 +36,11 @@ namespace Wordle
             {
                 double wins = connection.Table<UserStats>().Where(t => t.SolutionFound == true).Count();
                 double total = connection.Table<UserStats>().Count();
-                percentage = Math.Round(wins / total * 100, 2);
+
+                if (wins == 0)
+                    percentage = Math.Round(wins, 2);
+                else
+                    percentage = Math.Round(wins / total * 100, 2);
             }
             return Task.FromResult(percentage);
         }
