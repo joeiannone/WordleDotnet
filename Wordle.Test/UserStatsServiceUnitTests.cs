@@ -154,13 +154,25 @@ namespace Wordle.Test
 
         }
 
+        [Test]
         public async Task GetGuessDistributionTest()
         {
             ResetTable();
             Dictionary<int, int> guessDistribution;
             guessDistribution = await userStatsService.GetGuessDistributionAsync();
-            // TODO
-            //Assert.AreEqual(new Dictionary<int, int> {{ 1, 0 }, { 2, 0 }, { 2, 0 }}, guessDistribution);
+            Assert.AreEqual(new Dictionary<int, int> {{ 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 }, { 6, 0 } }, guessDistribution);
+
+            List<UserStats> userStatsList = new List<UserStats>();
+            userStatsList.Add(new UserStats() { Word = "test1", GuessCount = 3, SolutionFound = true });
+            userStatsList.Add(new UserStats() { Word = "test2", GuessCount = 6, SolutionFound = false });
+            userStatsList.Add(new UserStats() { Word = "test3", GuessCount = 2, SolutionFound = true });
+            userStatsList.Add(new UserStats() { Word = "test4", GuessCount = 4, SolutionFound = true });
+            userStatsList.Add(new UserStats() { Word = "test5", GuessCount = 6, SolutionFound = false });
+            userStatsList.Add(new UserStats() { Word = "test6", GuessCount = 4, SolutionFound = true });
+            userStatsList.Add(new UserStats() { Word = "test7", GuessCount = 3, SolutionFound = false });
+            ResetTable(userStatsList);
+            guessDistribution = await userStatsService.GetGuessDistributionAsync();
+            Assert.AreEqual(new Dictionary<int, int> { { 1, 0 }, { 2, 1 }, { 3, 1 }, { 4, 2 }, { 5, 0 }, { 6, 0 } }, guessDistribution);
         }
 
         private void ResetTable(List<UserStats> userStatsList = null)

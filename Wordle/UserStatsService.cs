@@ -1,8 +1,6 @@
 ﻿using SQLite;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Wordle.Interfaces;
@@ -99,7 +97,7 @@ namespace Wordle
                        where userStats.SolutionFound == true
                        orderby userStats.GuessCount
                        group userStats by userStats.GuessCount;
-
+            
             foreach (var d in dist)
             {
                 guessDistribution.Add(d.Key, d.Count());
@@ -114,7 +112,19 @@ namespace Wordle
              * Not a performance concern because we CAN assume n will 
              * always be a relatively small number
              */
-            for (int i = guessDistribution.Keys.Max(); i > 0; i--)
+            int distributionMax;
+            try
+            {
+                distributionMax = guessDistribution.Keys.Max();
+                if (distributionMax < 6)
+                    distributionMax = 6;
+            }
+            catch (InvalidOperationException)
+            {
+                distributionMax = 6;
+            }
+
+            for (int i = distributionMax; i > 0; i--)
             {
                 if (!guessDistribution.ContainsKey(i))
                     guessDistribution.Add(i, 0);
