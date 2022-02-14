@@ -12,28 +12,25 @@ namespace Wordle.CLI
         public UserStatsController(UserStatsService userStats)
         {
             userStatsService = userStats;
-            PrintTopStatsAsync();
+            PrintStats();
         }
 
-        public async void PrintTopStatsAsync()
+        public void PrintStats()
         {
-            List<UserStats> stats = await userStatsService.GetUserStatsAsync(10);
-            int gamesPlayed = await userStatsService.GetGamesPlayedAsync();
-            double winPercentage = await userStatsService.GetWinPercentageAsync();
-            int currentStreak = await userStatsService.GetCurrentStreakAsync();
-            int maxStreak = await userStatsService.GetMaxStreakAsync();
-            Dictionary<int, int> guessDistribution = await userStatsService.GetGuessDistributionAsync();
-         
-
             Console.WriteLine("\nSTATISTICS:");
             Console.WriteLine("--------------------------------------");
+            int gamesPlayed = userStatsService.GetGamesPlayed();
             Console.WriteLine($"Games Played:       {gamesPlayed}");
+            double winPercentage = userStatsService.GetWinPercentage();
             Console.WriteLine($"Win %:              {winPercentage}%");
+            int currentStreak = userStatsService.GetCurrentStreak();
             Console.WriteLine($"Current Streak:     {currentStreak}");
+            int maxStreak = userStatsService.GetMaxStreak();
             Console.WriteLine($"Max Streak:         {maxStreak}");
             Console.WriteLine();
             Console.WriteLine("GUESS DISTRIBUTION:");
             Console.WriteLine("--------------------------------------");
+            Dictionary<int, int> guessDistribution = userStatsService.GetGuessDistribution();
             // print in order of key
             for (int i = 1; i < guessDistribution.Count + 1; i++)
             {
@@ -42,6 +39,8 @@ namespace Wordle.CLI
                     Console.WriteLine($"{i} -----> {guessDistribution[i]}");
                 }
             }
+
+            List<UserStats> stats = userStatsService.GetUserStats(10);
             Console.WriteLine();
             Console.WriteLine("TOP 10");
             Console.WriteLine("--------------------------------------");
@@ -60,6 +59,7 @@ namespace Wordle.CLI
             }
             Console.WriteLine("");
             Console.ForegroundColor = defaultConsoleForeground;
+
         }
     }
 }
