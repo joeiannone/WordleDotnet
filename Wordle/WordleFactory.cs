@@ -58,8 +58,8 @@ namespace Wordle
             if (File.Exists(DBConnectionString))
             {
                 FileInfo fileinfo = new FileInfo(DBConnectionString);
-                //if (fileinfo.Length != 0)
-                    //return;
+                if (fileinfo.Length != 0)
+                    return;
             }
 
             // create app data directory for sqlite file
