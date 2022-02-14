@@ -9,6 +9,51 @@
       Title="SettingsPage">
 
     <Grid>
-        <Label Content="TODO: Settings page"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Label Content="Settings"
+               FontSize="20"
+               Grid.Row="0"
+               Grid.Column="0"/>
+        <Grid Grid.Row="1" Grid.Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <Label Content="Hard Mode" 
+                   Grid.Row="0" 
+                   Grid.Column="0"/>
+            <CheckBox Grid.Row="0" 
+                      Grid.Column="1"
+                      VerticalAlignment="Center"
+                      Name="HardMode"
+                      Click="Setting_Clicked"/>
+            <Label Content="Dark Mode"
+                   Grid.Row="1"
+                   Grid.Column="0"/>
+            <CheckBox Grid.Row="1"
+                      Grid.Column="1"
+                      VerticalAlignment="Center"
+                      Name="DarkMode"
+                      Click="Setting_Clicked"/>
+            <Label Content="High Contrast Mode"
+                   Grid.Row="2"
+                   Grid.Column="0"/>
+            <CheckBox Grid.Row="2"
+                      Grid.Column="1"
+                      VerticalAlignment="Center"
+                      Name="HighContrastMode"
+                      Click="Setting_Clicked"/>
+        </Grid>
     </Grid>
 </Page>

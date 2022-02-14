@@ -136,8 +136,7 @@ namespace Wordle
                 Random rand = new Random();
                 int maxId = connection.Table<Word>().Count();
                 int randomIndex = rand.Next(1, maxId);
-                List<Word> randomWords = connection.Table<Word>().Where(x => x.Id.Equals(randomIndex)).ToList();
-                randomWord = randomWords[0];
+                randomWord = connection.Table<Word>().Where(x => x.Id.Equals(randomIndex)).FirstOrDefault();
             }
             return randomWord.WordStr;
         }

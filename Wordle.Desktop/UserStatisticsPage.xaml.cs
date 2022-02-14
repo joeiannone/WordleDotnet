@@ -28,12 +28,12 @@ namespace Wordle.Desktop
         {
 
             UserStatsGrid.Children.Clear();
-            Played.Content = await userStatsService.GetGamesPlayedAsync();
-            WinPercentage.Content = await userStatsService.GetWinPercentageAsync();
-            CurrentStreak.Content = await userStatsService.GetCurrentStreakAsync();
-            MaxStreak.Content = await userStatsService.GetMaxStreakAsync();
+            Played.Content = await Task.Run(() => userStatsService.GetGamesPlayed());
+            WinPercentage.Content = await Task.Run(() => userStatsService.GetWinPercentage());
+            CurrentStreak.Content = await Task.Run(() => userStatsService.GetCurrentStreak());
+            MaxStreak.Content = await Task.Run(() => userStatsService.GetMaxStreak());
 
-            Dictionary<int, int> guessDistributions = await userStatsService.GetGuessDistributionAsync();
+            Dictionary<int, int> guessDistributions = await Task.Run(() => userStatsService.GetGuessDistribution());
             GuessDistributionGrid.Children.Clear();
             GuessDistributionGrid.RowDefinitions.Clear();
 

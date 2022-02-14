@@ -5,6 +5,7 @@ using System.IO;
 using System.Reflection;
 using Wordle.Interfaces;
 using Wordle.Models;
+using static Wordle.Models.Settings;
 
 namespace Wordle
 {
@@ -57,13 +58,15 @@ namespace Wordle
             if (File.Exists(DBConnectionString))
             {
                 FileInfo fileinfo = new FileInfo(DBConnectionString);
-                if (fileinfo.Length != 0)
-                    return;
+                //if (fileinfo.Length != 0)
+                    //return;
             }
-            Console.WriteLine("\nCreating file...\n");
+
             // create app data directory for sqlite file
             System.IO.Directory.CreateDirectory(AppDataFolderPath);
 
+
+            // set up words
             /**
              * Parse words from json file 
              */
@@ -75,15 +78,39 @@ namespace Wordle
                 Words = wordList.ConvertAll(wordStr => Word.CreateWord(wordStr));
             }
 
+            // create settings form fields
+            List<Settings> settingsList = new List<Settings>();
+            // hard mode field
+            Settings hardMode = Settings.CreateSettingsModel(1, "hard_mode", FormFieldType.Boolean);
+            hardMode.BooleanValue = false;
+            settingsList.Add(hardMode);
+            // dark mode field
+            Settings darkMode = Settings.CreateSettingsModel(1, "dark_mode", FormFieldType.Boolean);
+            darkMode.BooleanValue = false;
+            settingsList.Add(darkMode);
+            // high contrast mode
+            Settings highContrastMode = Settings.CreateSettingsModel(1, "high_contrast_mode", FormFieldType.Boolean);
+            highContrastMode.BooleanValue = false;
+            settingsList.Add(highContrastMode);
+
+
             /**
-             * Create/populate database
+             * Create/populate tables
              */
             using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
             {
+                // words
                 connection.DropTable<Word>();
                 connection.CreateTable<Word>();
-                connection.CreateTable<UserStats>();
                 connection.InsertAll(Words);
+
+                // settings
+                connection.DropTable<Settings>();
+                connection.CreateTable<Settings>();
+                connection.InsertAll(settingsList);
+
+                // user stats
+                connection.CreateTable<UserStats>();
             }
         }
     }

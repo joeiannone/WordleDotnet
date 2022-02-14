@@ -17,17 +17,17 @@ namespace Wordle
             DBConnectionString = dbConnectionString;
         }
 
-        public Task<int> GetGamesPlayedAsync()
+        public int GetGamesPlayed()
         {
             int count;
             using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
             {
                 count = connection.Table<UserStats>().Count();
             }
-            return Task.FromResult(count);
+            return count;
         }
 
-        public Task<double> GetWinPercentageAsync()
+        public double GetWinPercentage()
         {
             double percentage;
             using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
@@ -40,10 +40,10 @@ namespace Wordle
                 else
                     percentage = Math.Round(wins / total * 100, 2);
             }
-            return Task.FromResult(percentage);
+            return percentage;
         }
 
-        public Task<int> GetCurrentStreakAsync()
+        public int GetCurrentStreak()
         {
             int streak = 0;
             List<UserStats> userStatsList = GetAllUserStats();
@@ -59,10 +59,10 @@ namespace Wordle
                     streak++;
                 }
             }
-            return Task.FromResult(streak);
+            return streak;
         }
 
-        public Task<int> GetMaxStreakAsync()
+        public int GetMaxStreak()
         {
             int streak = 0;
             int max = 0;
@@ -86,10 +86,10 @@ namespace Wordle
             if (streak > max)
                 max = streak;
             
-            return Task.FromResult(max);
+            return max;
         }
 
-        public Task<Dictionary<int, int>> GetGuessDistributionAsync()
+        public Dictionary<int, int> GetGuessDistribution()
         {
             Dictionary<int, int> guessDistribution = new Dictionary<int, int>();
 
@@ -130,7 +130,7 @@ namespace Wordle
                     guessDistribution.Add(i, 0);
             }
 
-            return Task.FromResult(guessDistribution);
+            return guessDistribution;
         }
 
         /**
@@ -152,7 +152,7 @@ namespace Wordle
             return userStatsList;
         }
 
-        public Task<List<UserStats>> GetUserStatsAsync(int top = 20)
+        public List<UserStats> GetUserStats(int top = 20)
         {
             UserStats[] userStatsArray = new UserStats[top];
             using (SQLiteConnection connection = new SQLiteConnection(DBConnectionString))
@@ -160,7 +160,7 @@ namespace Wordle
                 userStatsArray = connection.Query<UserStats>(
                     $"SELECT * FROM UserStats WHERE SolutionFound = true ORDER BY GuessCount, TimeSpan LIMIT {top}").ToArray();
             }
-            return Task.FromResult(new List<UserStats>(userStatsArray));
+            return new List<UserStats>(userStatsArray);
         }
 
 

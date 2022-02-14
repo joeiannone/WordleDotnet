@@ -23,9 +23,10 @@ namespace Wordle.CLI
                 }
 
             }
-            catch (IndexOutOfRangeException ex)
+            catch (IndexOutOfRangeException)
             {
                 DisplayHelpOptions();
+                System.Environment.Exit(0);
             }
 
             switch (cmd)
@@ -38,7 +39,12 @@ namespace Wordle.CLI
                     UserStatsController userStatsController = new UserStatsController(
                         (UserStatsService)wordleFactory.GetWordleComponent("UserStats"));
                     break;
+                case "settings":
+                    SettingsController settingsController = new SettingsController(
+                        (SettingsService)wordleFactory.GetWordleComponent("Settings"));
+                    break;
                 default:
+                    Console.WriteLine("Unknown Command");
                     DisplayHelpOptions();
                     break;
             }
