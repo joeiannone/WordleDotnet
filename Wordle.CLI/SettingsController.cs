@@ -8,11 +8,12 @@ namespace Wordle.CLI
     class SettingsController
     {
         SettingsService settingsService;
+        List<Settings> settings;
 
         public SettingsController(SettingsService _settingsService)
         {
             settingsService = _settingsService;
-            List<Settings> settings = settingsService.GetSettingsForm();
+            settings = settingsService.GetSettingsForm();
 
             foreach (Settings s in settings)
             {
