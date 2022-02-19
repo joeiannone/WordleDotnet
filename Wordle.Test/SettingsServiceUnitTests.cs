@@ -69,6 +69,13 @@ namespace Wordle.Test
                     break;
             }
 
+            // test not found
+            _s = settingsService.GetSetting(0);
+            Assert.AreEqual(null, _s);
+
+            List<Settings> slist = settingsService.GetSettingsForm(0);
+            Assert.AreEqual(new List<Settings>(), slist);
+
         }
 
 
