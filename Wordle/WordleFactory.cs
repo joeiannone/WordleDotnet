@@ -25,9 +25,9 @@ namespace Wordle
             if (appDataFolderPath != null)
             {
                 AppDataFolderPath = appDataFolderPath;
-                DBConnectionString = Path.Combine(AppDataFolderPath, "Wordle.db");
             }
-                
+            DBConnectionString = Path.Combine(AppDataFolderPath, "Wordle.db");
+
             BuildDatabase();
         }
 
@@ -51,20 +51,19 @@ namespace Wordle
             }
         }
 
-        public void BuildDatabase()
+        public void BuildDatabase(Boolean force = false)
         {
 
             // return if file exists and not empty
             if (File.Exists(DBConnectionString))
             {
                 FileInfo fileinfo = new FileInfo(DBConnectionString);
-                if (fileinfo.Length != 0)
+                if (fileinfo.Length != 0 && !force)
                     return;
             }
 
             // create app data directory for sqlite file
             System.IO.Directory.CreateDirectory(AppDataFolderPath);
-
 
             // set up words
             /**
@@ -92,7 +91,6 @@ namespace Wordle
             Settings highContrastMode = Settings.CreateSettingsModel(1, "high_contrast_mode", FormFieldType.Boolean);
             highContrastMode.BooleanValue = false;
             settingsList.Add(highContrastMode);
-
 
             /**
              * Create/populate tables

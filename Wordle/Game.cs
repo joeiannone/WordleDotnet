@@ -1,7 +1,6 @@
 ﻿using SQLite;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Wordle.Interfaces;
 using Wordle.Models;
 
@@ -78,7 +77,6 @@ namespace Wordle
                 GameStats.SolutionFound = true;
             }
 
-            //new
             // check for correct first
             for (int i = 0; i < guess.Letters.Length; i++)
             {
