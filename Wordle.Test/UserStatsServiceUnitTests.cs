@@ -27,13 +27,13 @@ namespace Wordle.Test
         }
 
         [Test]
-        public async Task GetGamesPlayedTest()
+        public void GetGamesPlayedTest()
         {
             ResetTable();
 
             int gamesPlayed;
 
-            gamesPlayed = await userStatsService.GetGamesPlayedAsync();
+            gamesPlayed = userStatsService.GetGamesPlayed();
             Assert.AreEqual(0, gamesPlayed);
 
             // setup test data
@@ -43,7 +43,7 @@ namespace Wordle.Test
             userStatsList.Add(new UserStats() { Word = "test3", GuessCount = 2, SolutionFound = true });
             userStatsList.Add(new UserStats() { Word = "test4", GuessCount = 1, SolutionFound = true });
             ResetTable(userStatsList);
-            gamesPlayed = await userStatsService.GetGamesPlayedAsync();
+            gamesPlayed = userStatsService.GetGamesPlayed();
             Assert.AreEqual(4, gamesPlayed);
             userStatsList.Add(new UserStats() { Word = "test5", GuessCount = 6, SolutionFound = false });
             userStatsList.Add(new UserStats() { Word = "test6", GuessCount = 1, SolutionFound = true });
@@ -51,19 +51,19 @@ namespace Wordle.Test
             userStatsList.Add(new UserStats() { Word = "test8", GuessCount = 3, SolutionFound = true });
             userStatsList.Add(new UserStats() { Word = "test9", GuessCount = 3, SolutionFound = true });
             ResetTable(userStatsList);
-            gamesPlayed = await userStatsService.GetGamesPlayedAsync();
+            gamesPlayed = userStatsService.GetGamesPlayed();
             Assert.AreEqual(9, gamesPlayed);
 
         }
 
         [Test]
-        public async Task GetMaxStreakTest()
+        public void GetMaxStreakTest()
         {
             ResetTable();
 
             int maxStreak;
 
-            maxStreak = await userStatsService.GetMaxStreakAsync();
+            maxStreak = userStatsService.GetMaxStreak();
             Assert.AreEqual(0, maxStreak);
 
             // setup test data
@@ -71,7 +71,7 @@ namespace Wordle.Test
             userStatsList.Add(new UserStats() { Word = "test1", GuessCount = 3, SolutionFound = true });
             userStatsList.Add(new UserStats() { Word = "test2", GuessCount = 2, SolutionFound = true });
             ResetTable(userStatsList);
-            maxStreak = await userStatsService.GetMaxStreakAsync();
+            maxStreak = userStatsService.GetMaxStreak();
             Assert.AreEqual(2, maxStreak);
             userStatsList.Add(new UserStats() { Word = "test3", GuessCount = 2, SolutionFound = true });
             userStatsList.Add(new UserStats() { Word = "test4", GuessCount = 1, SolutionFound = true });
@@ -81,29 +81,29 @@ namespace Wordle.Test
             userStatsList.Add(new UserStats() { Word = "test8", GuessCount = 3, SolutionFound = true });
             userStatsList.Add(new UserStats() { Word = "test9", GuessCount = 3, SolutionFound = true });
             ResetTable(userStatsList);
-            maxStreak = await userStatsService.GetMaxStreakAsync();
+            maxStreak = userStatsService.GetMaxStreak();
             Assert.AreEqual(4, maxStreak);
         }
 
         [Test]
-        public async Task GetCurrentStreakTest()
+        public void GetCurrentStreakTest()
         {
             ResetTable();
             int currentStreak;
-            currentStreak = await userStatsService.GetCurrentStreakAsync();
+            currentStreak = userStatsService.GetCurrentStreak();
             Assert.AreEqual(0, currentStreak);
 
             List<UserStats> userStatsList = new List<UserStats>();
             userStatsList.Add(new UserStats() { Word = "test1", GuessCount = 6, SolutionFound = false });
             userStatsList.Add(new UserStats() { Word = "test2", GuessCount = 6, SolutionFound = false });
             ResetTable(userStatsList);
-            currentStreak = await userStatsService.GetCurrentStreakAsync();
+            currentStreak = userStatsService.GetCurrentStreak();
             Assert.AreEqual(0, currentStreak);
 
             userStatsList.Add(new UserStats() { Word = "test3", GuessCount = 6, SolutionFound = false });
             userStatsList.Add(new UserStats() { Word = "test4", GuessCount = 6, SolutionFound = true });
             ResetTable(userStatsList);
-            currentStreak = await userStatsService.GetCurrentStreakAsync();
+            currentStreak = userStatsService.GetCurrentStreak();
             Assert.AreEqual(1, currentStreak);
 
             userStatsList.Add(new UserStats() { Word = "test5", GuessCount = 6, SolutionFound = false });
@@ -111,7 +111,7 @@ namespace Wordle.Test
             userStatsList.Add(new UserStats() { Word = "test7", GuessCount = 6, SolutionFound = true });
             userStatsList.Add(new UserStats() { Word = "test8", GuessCount = 6, SolutionFound = true });
             ResetTable(userStatsList);
-            currentStreak = await userStatsService.GetCurrentStreakAsync();
+            currentStreak = userStatsService.GetCurrentStreak();
             Assert.AreEqual(3, currentStreak);
 
             userStatsList.Add(new UserStats() { Word = "test9", GuessCount = 6, SolutionFound = true });
@@ -119,23 +119,23 @@ namespace Wordle.Test
             userStatsList.Add(new UserStats() { Word = "test11", GuessCount = 6, SolutionFound = true });
             userStatsList.Add(new UserStats() { Word = "test12", GuessCount = 6, SolutionFound = false });
             ResetTable(userStatsList);
-            currentStreak = await userStatsService.GetCurrentStreakAsync();
+            currentStreak = userStatsService.GetCurrentStreak();
             Assert.AreEqual(0, currentStreak);
 
         }
 
         [Test]
-        public async Task GetWinPercentageTest()
+        public void GetWinPercentageTest()
         {
             ResetTable();
             double winPercentage;
-            winPercentage = await userStatsService.GetWinPercentageAsync();
+            winPercentage = userStatsService.GetWinPercentage();
             Assert.AreEqual(0, winPercentage);
             List<UserStats> userStatsList = new List<UserStats>();
             userStatsList.Add(new UserStats() { Word = "test1", GuessCount = 3, SolutionFound = true });
             userStatsList.Add(new UserStats() { Word = "test2", GuessCount = 6, SolutionFound = false });
             ResetTable(userStatsList);
-            winPercentage = await userStatsService.GetWinPercentageAsync();
+            winPercentage = userStatsService.GetWinPercentage();
             Assert.AreEqual(Math.Round(1.0 / 2.0 * 100, 2), winPercentage);
 
             userStatsList.Add(new UserStats() { Word = "test1", GuessCount = 3, SolutionFound = true });
@@ -149,17 +149,17 @@ namespace Wordle.Test
             userStatsList.Add(new UserStats() { Word = "test9", GuessCount = 3, SolutionFound = true });
 
             ResetTable(userStatsList);
-            winPercentage = await userStatsService.GetWinPercentageAsync();
+            winPercentage = userStatsService.GetWinPercentage();
             Assert.AreEqual(Math.Round(7.0 / 11.0 * 100, 2), winPercentage);
 
         }
 
         [Test]
-        public async Task GetGuessDistributionTest()
+        public void GetGuessDistributionTest()
         {
             ResetTable();
             Dictionary<int, int> guessDistribution;
-            guessDistribution = await userStatsService.GetGuessDistributionAsync();
+            guessDistribution = userStatsService.GetGuessDistribution();
             Assert.AreEqual(new Dictionary<int, int> {{ 1, 0 }, { 2, 0 }, { 3, 0 }, { 4, 0 }, { 5, 0 }, { 6, 0 } }, guessDistribution);
 
             List<UserStats> userStatsList = new List<UserStats>();
@@ -171,7 +171,7 @@ namespace Wordle.Test
             userStatsList.Add(new UserStats() { Word = "test6", GuessCount = 4, SolutionFound = true });
             userStatsList.Add(new UserStats() { Word = "test7", GuessCount = 3, SolutionFound = false });
             ResetTable(userStatsList);
-            guessDistribution = await userStatsService.GetGuessDistributionAsync();
+            guessDistribution = userStatsService.GetGuessDistribution();
             Assert.AreEqual(new Dictionary<int, int> { { 1, 0 }, { 2, 1 }, { 3, 1 }, { 4, 2 }, { 5, 0 }, { 6, 0 } }, guessDistribution);
         }
 
