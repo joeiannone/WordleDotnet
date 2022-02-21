@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.CommandLine;
+using System.CommandLine.IO;
 using System.Text;
 using Wordle.Models;
 
@@ -14,11 +16,6 @@ namespace Wordle.CLI
         {
             settingsService = _settingsService;
             settings = settingsService.GetSettingsForm();
-
-            foreach (Settings s in settings)
-            {
-                Console.WriteLine($"{s.Name} | {s.FormId} | {s.FieldType} | {s.BooleanValue} | {s.IntValue} | {s.StringValue}");
-            }
         }
     }
 }
