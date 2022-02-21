@@ -1,51 +1,76 @@
 ﻿using System;
+using System.CommandLine;
+using System.CommandLine.NamingConventionBinder;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Wordle.CLI
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
-
-            WordleFactory wordleFactory = new WordleFactory();
-
-            string cmd = "";
-            List<string> options = new List<string>();
-
-            try
+            Command play = new Command("play", "Play a game of Wordle.")
             {
-                cmd = args[0].ToLower();
+                new Option("--verbose", "Show details"),
+            };
 
-                foreach (string arg in args)
-                {
-                    // TODO: parse out options if any
-                }
-
-            }
-            catch (IndexOutOfRangeException)
+            Command stats = new Command("stats", "Display user statistics.")
             {
-                DisplayHelpOptions();
-                System.Environment.Exit(0);
-            }
+                new Option("--verbose", "Show details"),
+            };
 
-            switch (cmd)
+            Command settings = new Command("settings", "Manage settings.")
             {
-                case "play":
-                    GameController gameController = new GameController(
-                        (Game)wordleFactory.GetWordleComponent("Game"));
-                    break;
-                case "stats":
-                    UserStatsController userStatsController = new UserStatsController(
-                        (UserStatsService)wordleFactory.GetWordleComponent("UserStats"));
-                    break;
-                case "settings":
-                    SettingsController settingsController = new SettingsController(
-                        (SettingsService)wordleFactory.GetWordleComponent("Settings"));
+                new Argument<string>("name", "Setting name."),
+                new Option("--on", "Turn on"),
+                new Option("--off", "Turn off"),
+                new Option(new[] { "--verbose", "-v" }, "Show details."),
+            };
+
+            RootCommand cmd = new RootCommand
+            {
+                play,
+                stats,
+                settings
+            };
+
+            play.Handler = CommandHandler.Create<string, string?, bool, IConsole>(PlayHandler);
+            stats.Handler = CommandHandler.Create<string, string?, bool, IConsole>(UserStatsHandler);
+            settings.Handler = CommandHandler.Create<string, bool, bool, bool, IConsole>(SettingsHandler);
+
+            return cmd.Invoke(args);
+        }
+
+        static void PlayHandler(string name, string? cmd, bool verbose, IConsole console)
+        {
+            var wf = new WordleFactory();
+            var gameController = new GameController(
+                        (Game)wf.GetWordleComponent("Game"));
+        }
+
+        static void UserStatsHandler(string name, string? cmd, bool verbose, IConsole console)
+        {
+            var wf = new WordleFactory();
+            var gameController = new UserStatsController(
+                        (UserStatsService)wf.GetWordleComponent("UserStats"));
+        }
+
+        static void SettingsHandler(string name, bool on, bool off, bool verbose, IConsole console)
+        {
+           
+            var wf = new WordleFactory();
+            var settingsController = new SettingsController(
+                        (SettingsService)wf.GetWordleComponent("Settings"));
+
+            Console.WriteLine(name);
+            switch (name)
+            {
+                case "hardmode":
+                    
                     break;
                 default:
-                    Console.WriteLine("Unknown Command");
-                    DisplayHelpOptions();
+
                     break;
             }
             
