@@ -28,11 +28,11 @@ namespace Wordle.Desktop
         public SettingsPage()
         {
             InitializeComponent();
+            Loaded += Page_Loaded;
 
             WordleFactory wordle = new WordleFactory();
             settingsService = (SettingsService)wordle.GetWordleComponent("Settings");
 
-            PopulateForm();
         }
 
         private void PopulateForm()
@@ -76,6 +76,11 @@ namespace Wordle.Desktop
                     settingsService.SaveSettings(high_contrast);
                     break;
             }
+        }
+
+        public void Page_Loaded(object sender, RoutedEventArgs e)
+        {
+            PopulateForm();
         }
     }
 }
