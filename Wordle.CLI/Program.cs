@@ -22,9 +22,8 @@ namespace Wordle.CLI
 
             Command settings = new Command("settings", "Manage settings.")
             {
-                new Argument<string>("name", "Setting name."),
-                new Option("--on", "Turn on"),
-                new Option("--off", "Turn off"),
+                new Argument<string>("settingid", "Available setting id options: \"hard_mode\""),
+                new Option<string?>("--set", "Available set options: on, off"),
                 new Option(new[] { "--verbose", "-v" }, "Show details."),
             };
 
@@ -35,50 +34,45 @@ namespace Wordle.CLI
                 settings
             };
 
-            play.Handler = CommandHandler.Create<string, string?, bool, IConsole>(PlayHandler);
-            stats.Handler = CommandHandler.Create<string, string?, bool, IConsole>(UserStatsHandler);
-            settings.Handler = CommandHandler.Create<string, bool, bool, bool, IConsole>(SettingsHandler);
+            play.Handler = CommandHandler.Create<bool, IConsole>(PlayHandler);
+            stats.Handler = CommandHandler.Create<bool, IConsole>(UserStatsHandler);
+            settings.Handler = CommandHandler.Create<string, string?, bool, IConsole>(SettingsHandler);
 
             return cmd.Invoke(args);
         }
 
-        static void PlayHandler(string name, string? cmd, bool verbose, IConsole console)
+        static void PlayHandler(bool verbose, IConsole console)
         {
             var wf = new WordleFactory();
-            var gameController = new GameController(
-                        (Game)wf.GetWordleComponent("Game"));
+            var gameController = new GameController((Game) wf.GetWordleComponent("Game"));
         }
 
-        static void UserStatsHandler(string name, string? cmd, bool verbose, IConsole console)
+        static void UserStatsHandler(bool verbose, IConsole console)
         {
             var wf = new WordleFactory();
-            var gameController = new UserStatsController(
-                        (UserStatsService)wf.GetWordleComponent("UserStats"));
+            var userStatsController = new UserStatsController((UserStatsService) wf.GetWordleComponent("UserStats"));
         }
 
-        static void SettingsHandler(string name, bool on, bool off, bool verbose, IConsole console)
+        static void SettingsHandler(string settingid, string? set, bool verbose, IConsole console)
         {
            
             var wf = new WordleFactory();
-            var settingsController = new SettingsController(
-                        (SettingsService)wf.GetWordleComponent("Settings"));
+            var settingsController = new SettingsController((SettingsService) wf.GetWordleComponent("Settings"));
 
-            Console.WriteLine(name);
-            switch (name)
+            switch (settingid)
             {
-                case "hardmode":
-                    
-                    break;
-                default:
-
+                case "hard_mode":
+                    if (String.IsNullOrEmpty(set))
+                    {
+                        settingsController.ShowSetting(settingid);
+                    } 
+                    else
+                    {
+                        settingsController.SetSetting(settingid, set);
+                    }
                     break;
             }
             
-        }
-
-        static void DisplayHelpOptions()
-        {
-            Console.WriteLine("TODO: List commands and options");
         }
     }
 }
