@@ -10,15 +10,9 @@ namespace Wordle.CLI
     {
         static int Main(string[] args)
         {
-            Command play = new Command("play", "Play a game of Wordle.")
-            {
-                new Option("--verbose", "Show details"),
-            };
+            Command play = new Command("play", "Play a game of Wordle.");
 
-            Command stats = new Command("stats", "Display user statistics.")
-            {
-                new Option("--verbose", "Show details"),
-            };
+            Command stats = new Command("stats", "Display user statistics.");
 
             Command settings = new Command("settings", "Manage settings.")
             {
@@ -34,30 +28,36 @@ namespace Wordle.CLI
                 settings
             };
 
-            play.Handler = CommandHandler.Create<bool, IConsole>(PlayHandler);
-            stats.Handler = CommandHandler.Create<bool, IConsole>(UserStatsHandler);
-            settings.Handler = CommandHandler.Create<string, string?, bool, IConsole>(SettingsHandler);
+            WordleFactory wf = new WordleFactory();
+
+            play.Handler = CommandHandler.Create(
+                (IConsole console, Game game) => 
+                PlayHandler(console, (Game)wf.GetWordleComponent("Game")));
+
+            stats.Handler = CommandHandler.Create(
+                (IConsole console, UserStatsService userStatsService) => 
+                UserStatsHandler(console, (UserStatsService)wf.GetWordleComponent("UserStats")));
+
+            settings.Handler = CommandHandler.Create(
+                (string settingid, string? set, bool verbose, IConsole console, SettingsService settingsService) => 
+                    SettingsHandler(settingid, set, verbose, console, (SettingsService)wf.GetWordleComponent("Settings")));
 
             return cmd.Invoke(args);
         }
 
-        static void PlayHandler(bool verbose, IConsole console)
+        static void PlayHandler(IConsole console, Game game)
         {
-            var wf = new WordleFactory();
-            var gameController = new GameController((Game) wf.GetWordleComponent("Game"));
+            var gameController = new GameController(game);
         }
 
-        static void UserStatsHandler(bool verbose, IConsole console)
+        static void UserStatsHandler(IConsole console, UserStatsService userStatsService)
         {
-            var wf = new WordleFactory();
-            var userStatsController = new UserStatsController((UserStatsService) wf.GetWordleComponent("UserStats"));
+            var userStatsController = new UserStatsController(userStatsService);
         }
 
-        static void SettingsHandler(string settingid, string? set, bool verbose, IConsole console)
+        static void SettingsHandler(string settingid, string? set, bool verbose, IConsole console, SettingsService settingsService)
         {
-           
-            var wf = new WordleFactory();
-            var settingsController = new SettingsController((SettingsService) wf.GetWordleComponent("Settings"));
+            var settingsController = new SettingsController(settingsService);
 
             switch (settingid)
             {
@@ -69,6 +69,8 @@ namespace Wordle.CLI
                     else
                     {
                         settingsController.SetSetting(settingid, set);
+                        if (verbose)
+                            settingsController.ShowSetting(settingid);
                     }
                     break;
             }
