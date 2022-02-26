@@ -62,17 +62,17 @@ namespace Wordle.Desktop
             {
                 case "HardMode":
                     Settings hard_mode = settingsService.GetSetting(FormID, "hard_mode");
-                    hard_mode.BooleanValue = setting.IsChecked;
+                    hard_mode.BooleanValue = (bool)setting.IsChecked;
                     settingsService.SaveSettings(hard_mode);
                     break;
                 case "DarkMode":
                     Settings dark_mode = settingsService.GetSetting(FormID, "dark_mode");
-                    dark_mode.BooleanValue = setting.IsChecked;
+                    dark_mode.BooleanValue = (bool)setting.IsChecked;
                     settingsService.SaveSettings(dark_mode);
                     break;
                 case "HighContrastMode":
                     Settings high_contrast = settingsService.GetSetting(FormID, "high_contrast_mode");
-                    high_contrast.BooleanValue = setting.IsChecked;
+                    high_contrast.BooleanValue = (bool)setting.IsChecked;
                     settingsService.SaveSettings(high_contrast);
                     break;
             }

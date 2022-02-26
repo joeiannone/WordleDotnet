@@ -10,12 +10,14 @@ namespace Wordle.Test
     public class GameUnitTests
     {
         private Game game;
+        private SettingsService settingsService;
 
         [SetUp]
         public void SetUp()
         {
             WordleFactory wordle = new WordleFactory();
             game = (Game)wordle.GetWordleComponent("Game");
+            settingsService = (SettingsService)wordle.GetWordleComponent("Settings");
         }
 
         [Test]
@@ -112,7 +114,50 @@ namespace Wordle.Test
                 Assert.AreEqual(ex.Message, "Word not found in database.");
             }
 
+           
+
             
+        }
+
+        [Test]
+        public void HardModeValidationTest()
+        {
+
+            // test hard mode validation
+            Settings hardmode = settingsService.GetSetting(1, "hard_mode");
+            hardmode.BooleanValue = true;
+            settingsService.SaveSettings(hardmode);
+
+            if (hardmode.BooleanValue)
+            {
+                //Must use \"{LettersFound[i]}\" in position {i+1}\n
+                //Must use letter \"{l}\"\n
+                game.reInit();
+                game.CurrentSecretWord = Word.CreateWord("dealt");
+                game.Guess(game.ValidateWord("deans"));
+
+                try
+                {
+                    game.Guess(game.ValidateWord("teeth"));
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Assert.AreEqual(ex.Message, "Must use \"d\" in position 1\nMust use \"a\" in position 3\n");
+                }
+
+                game.reInit();
+                game.CurrentSecretWord = Word.CreateWord("crate");
+                game.Guess(game.ValidateWord("aches"));
+                try
+                {
+                    game.Guess(game.ValidateWord("crown"));
+                }
+                catch (InvalidOperationException ex)
+                {
+                    Assert.AreEqual(ex.Message, "Must use letter \"a\"\nMust use letter \"e\"\n");
+                }
+
+            }
         }
 
     }
