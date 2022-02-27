@@ -1,6 +1,7 @@
 ﻿using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Wordle.Interfaces;
 using Wordle.Models;
 
@@ -115,7 +116,8 @@ namespace Wordle
                 if (solutionLetters.Contains(letter) && inWordFrequenciesCountDown[letter] > 0)
                 {
                     guess.LetterStates[letterKey] = Word.LetterState.inWord;
-                    LettersHinted.Add(letter);
+                    if (!LettersHinted.Contains(letter))
+                        LettersHinted.Add(letter);
                 }
                 else 
                 {

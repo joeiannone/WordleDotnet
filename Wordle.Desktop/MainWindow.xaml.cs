@@ -1,8 +1,9 @@
 ﻿using System;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-
+using System.Windows.Media;
 
 namespace Wordle.Desktop
 {
@@ -14,7 +15,14 @@ namespace Wordle.Desktop
         public MainWindow()
         {
             InitializeComponent();
+            VersionLabel.Text = $"Version {Assembly.GetExecutingAssembly().GetName().Version.ToString()}";
             MainTabControl.SelectedIndex = 0;
+
+            if ((bool)Application.Current.Properties["dark_mode"])
+            {
+                //MainWindowGrid.Background = Brushes.Black;
+            }
+                
         }
     }
 }

@@ -44,7 +44,6 @@ namespace Wordle.Desktop
             }
                 
             BuildWordleGrid();
-            UserMessageTextBlock.Content = "";
             ActiveColumn = 0;
 
             // make sure to remove before recreating key up listener
@@ -141,8 +140,6 @@ namespace Wordle.Desktop
             if (game.wordFound || game.CurrentRowPosition == game.COLUMNS + 1)
                 return;
 
-            UserMessageTextBlock.Content = "";
-
             string guessStr = "";
             for (int col = 0; col < game.COLUMNS; col++)
             {
@@ -158,7 +155,7 @@ namespace Wordle.Desktop
             }
             catch (InvalidOperationException ex)
             {
-                UserMessageTextBlock.Content = ex.Message;
+                MessageBox.Show(ex.Message, "Violation", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
 
         }
@@ -168,6 +165,14 @@ namespace Wordle.Desktop
             if (guessResult.ValidationMessages.Count != 0)
                 return;
 
+            string CorrectHex = "#6AAA64";
+            string InWordHex = "#C9B458";
+            if ((bool)Application.Current.Properties["high_contrast_mode"])
+            {
+                CorrectHex = "#F5793A";
+                InWordHex = "#85C0F9";
+            }
+
             for (int col = 0; col < game.COLUMNS; col++)
             {
                 LetterState letterState = guessResult.LetterStates[$"{game.CurrentRowPosition}{col}"];
@@ -176,14 +181,15 @@ namespace Wordle.Desktop
                 textBox.Foreground = Brushes.White;
                 textBox.BorderThickness = new Thickness(0);
 
+
                 switch (letterState)
                 {
                     case LetterState.isCorrect:
-                        textBox.Background = (Brush)BC.ConvertFrom("#6AAA64");
+                        textBox.Background = (Brush)BC.ConvertFrom(CorrectHex);
                         break;
 
                     case LetterState.inWord:
-                        textBox.Background = (Brush)BC.ConvertFrom("#C9B458");
+                        textBox.Background = (Brush)BC.ConvertFrom(InWordHex);
                         break;
 
                     case LetterState.notInWord:
@@ -196,12 +202,16 @@ namespace Wordle.Desktop
 
             if (game.wordFound)
             {
-                UserMessageTextBlock.Content = $"Congrats! You got it.\nYou found the word in {game.GetTimespanDisplayString()}";
+                MessageBoxResult gameCompleteResult = MessageBox.Show($"Congrats! You got it.\nYou found the word in {game.GetTimespanDisplayString()}.\n\nReplay?", "Solution Found", MessageBoxButton.YesNoCancel, MessageBoxImage.Information);
+                if (gameCompleteResult == MessageBoxResult.Yes)
+                    InitGame();
                 return;
             }
             else if (game.CurrentRowPosition == game.Rows)
             {
-                UserMessageTextBlock.Content = $"You missed the mark :( \nThe word was {game.CurrentSecretWord.ToString()}. ";
+                MessageBoxResult gameCompleteResult = MessageBox.Show($"You missed the mark :( \nThe word was {game.CurrentSecretWord.ToString()}\n\nReplay?", ":/", MessageBoxButton.YesNoCancel, MessageBoxImage.Warning);
+                if (gameCompleteResult == MessageBoxResult.Yes)
+                    InitGame();
                 return;
             }
 
@@ -216,6 +226,9 @@ namespace Wordle.Desktop
 
         private void Page_KeyUp(object sender, KeyEventArgs e)
         {
+            if (game.wordFound) 
+                return;
+
             // is a string with length 1 and is a letter
             if (e.Key.ToString().Length == 1 && char.IsLetter(char.Parse(e.Key.ToString())))
             {
