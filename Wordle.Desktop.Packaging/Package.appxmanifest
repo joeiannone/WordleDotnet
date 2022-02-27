@@ -9,7 +9,7 @@
   <Identity
     Name="383ecfa2-e37a-45f9-a560-6e0e1ad4215c"
     Publisher="CN=josep"
-    Version="1.0.0.0" />
+    Version="1.0.2.0" />
 
   <Properties>
     <DisplayName>Wordle.Desktop.Packaging</DisplayName>

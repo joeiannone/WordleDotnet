@@ -1,8 +1,10 @@
 ﻿using SQLite;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Wordle.Interfaces;
 using Wordle.Models;
+
 
 namespace Wordle
 {
@@ -14,17 +16,21 @@ namespace Wordle
 
         private string DBConnectionString;
 
-        public int COLUMNS { get; } = 5;
+        public readonly int COLUMNS = 5;
         public int Rows;
         public DateTime StartTime;
         public TimeSpan timespan { get; set; }
 
         // this gets changed inside Guess method
         public bool wordFound = false;
+
+        public List<ValidatedWord> GuessHistroy;
+        public char?[] LettersFound;
+        public List<char> LettersHinted;
+
         public int CurrentRowPosition { get; set; }
         public Word CurrentSecretWord { get; set; }
         public UserStats GameStats { get; set; }
-
 
         public Game(string dbConnectionString, int rows = 6)
         {
@@ -42,6 +48,11 @@ namespace Wordle
             CurrentSecretWord = Word.CreateWord(GenerateRandomWord());
             StartTime = DateTime.Now;
             GameStats = UserStats.CreateUserStatsModel(CurrentSecretWord.ToString());
+            GuessHistroy = new List<ValidatedWord>();
+            LettersFound = new char?[COLUMNS];
+            for (int i = 0; i < COLUMNS; i++)
+                LettersFound[i] = null;
+            LettersHinted = new List<char>();
         }
 
         /**
@@ -61,6 +72,7 @@ namespace Wordle
          */
         public ValidatedWord Guess(ValidatedWord guess)
         {
+
             if (!guess.IsValid)
             {
                 return guess;
@@ -77,7 +89,7 @@ namespace Wordle
                 GameStats.SolutionFound = true;
             }
 
-            // check for correct first
+            // check for correct letters first
             for (int i = 0; i < guess.Letters.Length; i++)
             {
                 char letter = guess.Letters[i];
@@ -87,6 +99,8 @@ namespace Wordle
                 {
                     guess.LetterStates[letterKey] = Word.LetterState.isCorrect;
                     inWordFrequenciesCountDown[letter]--;
+                    LettersFound[i] = letter;
+                    LettersHinted.Remove(letter);
                 }
             }
 
@@ -102,6 +116,8 @@ namespace Wordle
                 if (solutionLetters.Contains(letter) && inWordFrequenciesCountDown[letter] > 0)
                 {
                     guess.LetterStates[letterKey] = Word.LetterState.inWord;
+                    if (!LettersHinted.Contains(letter))
+                        LettersHinted.Add(letter);
                 }
                 else 
                 {
@@ -117,6 +133,8 @@ namespace Wordle
                 GameStats.SolutionFound = wordFound;
                 SaveGameStats();
             }
+
+            GuessHistroy.Add(guess);
 
             return guess;
         }
@@ -156,8 +174,9 @@ namespace Wordle
         {
             wordStr = wordStr.ToLower().Trim();
             string msg;
-            Boolean isValid = false;
+            bool isValid = false;
             List<string> validationMessages = new List<string>();
+            bool hardmode = GetSetting("hard_mode").BooleanValue;
 
             if (wordStr.Length != COLUMNS)
             {
@@ -178,6 +197,27 @@ namespace Wordle
                     {
                         isValid = true;
                     }
+                }
+            }
+
+            if (hardmode)
+            {
+                string hardmodeViolationsMsg = "";
+                char[] guessArr = wordStr.ToCharArray();
+
+                for(int i = 0; i < guessArr.Length; i++) 
+                {
+                    if (LettersFound[i] != null && LettersFound[i] != guessArr[i])
+                        hardmodeViolationsMsg += $"Must use \"{LettersFound[i]}\" in position {i+1}\n";
+                }
+                foreach (char l in LettersHinted)
+                {
+                    if (!wordStr.Contains(l))
+                        hardmodeViolationsMsg += $"Must use letter \"{l}\"\n";
+                }
+                if (hardmodeViolationsMsg.Length > 0)
+                {
+                    throw new InvalidOperationException(hardmodeViolationsMsg);
                 }
             }
 
@@ -213,6 +253,17 @@ namespace Wordle
             {
                 return string.Format("{0}s", timespan.Seconds);
             }
+        }
+
+        public Settings GetSetting(string settingname)
+        {
+            SettingsService settingsService = new SettingsService(DBConnectionString);
+            return settingsService.GetSetting(1, settingname);
+        }
+
+        public void reInit()
+        {
+            Init();
         }
 
         /**

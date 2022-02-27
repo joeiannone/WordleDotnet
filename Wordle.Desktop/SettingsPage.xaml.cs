@@ -58,23 +58,32 @@ namespace Wordle.Desktop
         private void Setting_Clicked(object sender, RoutedEventArgs e)
         {
             CheckBox setting = sender as CheckBox;
+            MessageBoxResult? restartResult = null;
             switch (setting.Name)
             {
                 case "HardMode":
                     Settings hard_mode = settingsService.GetSetting(FormID, "hard_mode");
-                    hard_mode.BooleanValue = setting.IsChecked;
+                    hard_mode.BooleanValue = setting.IsChecked ?? false;
                     settingsService.SaveSettings(hard_mode);
                     break;
                 case "DarkMode":
                     Settings dark_mode = settingsService.GetSetting(FormID, "dark_mode");
-                    dark_mode.BooleanValue = setting.IsChecked;
+                    dark_mode.BooleanValue = setting.IsChecked ?? false;
                     settingsService.SaveSettings(dark_mode);
+                    restartResult = MessageBox.Show("\"Dark Mode\" requires an app restart to take effect.\n\nRestart now?", "Restart", MessageBoxButton.YesNoCancel, MessageBoxImage.Information);
                     break;
                 case "HighContrastMode":
                     Settings high_contrast = settingsService.GetSetting(FormID, "high_contrast_mode");
-                    high_contrast.BooleanValue = setting.IsChecked;
+                    high_contrast.BooleanValue = setting.IsChecked ?? false;
                     settingsService.SaveSettings(high_contrast);
+                    restartResult = MessageBox.Show("\"High Contrast Mode\" requires an app restart to take effect.\n\nRestart now?", "Restart", MessageBoxButton.YesNoCancel, MessageBoxImage.Information);
                     break;
+            }
+
+            if (restartResult == MessageBoxResult.Yes)
+            {
+                System.Diagnostics.Process.Start(Application.ResourceAssembly.Location);
+                Application.Current.Shutdown();
             }
         }
 

@@ -21,11 +21,11 @@ namespace Wordle.Models
 
         public FormFieldType FieldType { get; set; }
 
-        public int? IntValue { get; set; }
+        public int IntValue { get; set; }
 
-        public Boolean? BooleanValue { get; set; }
+        public Boolean BooleanValue { get; set; }
 
-        public string? StringValue { get; set; }
+        public string StringValue { get; set; }
 
         public static Settings CreateSettingsModel(int formId, string name, FormFieldType fieldType)
         {
