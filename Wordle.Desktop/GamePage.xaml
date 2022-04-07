@@ -36,12 +36,5 @@
                 BorderThickness="0"/>
         <StackPanel x:Name="GamePanel"
                     Grid.Row="4"></StackPanel>
-        <Button Content="Enter"
-                Click="SubmitButton_Click"
-                Margin="5,20"
-                Padding="10,5"
-                HorizontalAlignment="Right"
-                Grid.Row="5"
-                FontSize="18"/>
     </Grid>
 </Page>

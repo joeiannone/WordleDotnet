@@ -9,5 +9,35 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="FontSize" Value="24"/>
         </Style>
+        <Style TargetType="Window" x:Key="darkModeWindowStyle">
+            <Setter Property="Background" Value="#000000"/>
+            <Setter Property="Foreground"  Value="#FFFFFF"/>
+        </Style>
+        <Style TargetType="TabItem" x:Key="darkModeTabItemStyle">
+            <Setter Property="Background" Value="#000000"/>
+            <Setter Property="Foreground"  Value="#FFFFFF"/>
+        </Style>
+        <Style TargetType="TabControl" x:Key="darkModeTabStyle">
+            <Setter Property="Background" Value="#000000"/>
+            <Setter Property="Foreground"  Value="#FFFFFF"/>
+        </Style>
+        <Style TargetType="Grid" x:Key="darkModeGridStyle">
+            <Setter Property="Background" Value="#000000"/>
+        </Style>
+        <Style TargetType="StackPanel" x:Key="darkModeStackPanelStyle">
+            <Setter Property="Background" Value="#000000"/>
+        </Style>
+        <Style TargetType="Label" x:Key="darkModeLabelStyle">
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+        </Style>
+        <Style TargetType="TextBox" x:Key="darkModeTextBoxStyle">
+            <Setter Property="Background" Value="#000000"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+        </Style>
+        <Style TargetType="Button" x:Key="darkModeButtonStyle">
+            <Setter Property="Background" Value="#000000"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+        </Style>
+        
     </Application.Resources>
 </Application>

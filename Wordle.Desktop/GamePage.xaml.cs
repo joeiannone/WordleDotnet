@@ -118,10 +118,14 @@ namespace Wordle.Desktop
                         //textBox.Background = (Brush)BC.ConvertFrom("#D3D6dA");
                     }
 
+                    
+
                     textBox.HorizontalContentAlignment = HorizontalAlignment.Center;
                     textBox.VerticalContentAlignment = VerticalAlignment.Center;
                     TextBoxes.Add($"x{i}x{j}", textBox);
                     GameGrid.Children.Add(textBox);
+
+
 
                 }
 
@@ -202,7 +206,7 @@ namespace Wordle.Desktop
 
             if (game.wordFound)
             {
-                MessageBoxResult gameCompleteResult = MessageBox.Show($"Congrats! You got it.\nYou found the word in {game.GetTimespanDisplayString()}.\n\nReplay?", "Solution Found", MessageBoxButton.YesNoCancel, MessageBoxImage.Information);
+                MessageBoxResult gameCompleteResult = MessageBox.Show($"You got it.\nYou found the word in {game.GetTimespanDisplayString()}.\n\nReplay?", "Solution Found", MessageBoxButton.YesNoCancel, MessageBoxImage.Information);
                 if (gameCompleteResult == MessageBoxResult.Yes)
                     InitGame();
                 return;
@@ -236,7 +240,7 @@ namespace Wordle.Desktop
                 Label activeTextBox = TextBoxes[$"x{game.CurrentRowPosition}x{ActiveColumn}"];
                 activeTextBox.Content = letter;
                 activeTextBox.BorderThickness = new Thickness(1);
-                activeTextBox.BorderBrush = Brushes.Black;
+
                 IncrementActiveColumn();
             }
             else if (e.Key == Key.Enter)
@@ -262,6 +266,12 @@ namespace Wordle.Desktop
         private void SubmitButton_Click(object sender, RoutedEventArgs e)
         {
             SubmitGuess();
+        }
+
+        private void ShowKeyboard_Click(object sender, RoutedEventArgs e)
+        {
+            KeyboardWindow keyboardWindow = new KeyboardWindow(GameGrid);
+            keyboardWindow.Show();
         }
 
         private void GamePage_Loaded(object sender, RoutedEventArgs e)

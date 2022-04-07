@@ -20,7 +20,8 @@ namespace Wordle.Desktop
 
             if ((bool)Application.Current.Properties["dark_mode"])
             {
-                //MainWindowGrid.Background = Brushes.Black;
+                this.Style = (Style)this.FindResource("darkModeWindowStyle");
+                MainTabControl.Style = (Style)this.FindResource("darkModeTabStyle");
             }
                 
         }
