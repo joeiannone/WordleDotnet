@@ -45,9 +45,6 @@ namespace Wordle.Desktop
                     case "hard_mode":
                         HardMode.IsChecked = _s.BooleanValue;
                         break;
-                    case "dark_mode":
-                        DarkMode.IsChecked = _s.BooleanValue;
-                        break;
                     case "high_contrast_mode":
                         HighContrastMode.IsChecked = _s.BooleanValue;
                         break;
@@ -65,12 +62,6 @@ namespace Wordle.Desktop
                     Settings hard_mode = settingsService.GetSetting(FormID, "hard_mode");
                     hard_mode.BooleanValue = setting.IsChecked ?? false;
                     settingsService.SaveSettings(hard_mode);
-                    break;
-                case "DarkMode":
-                    Settings dark_mode = settingsService.GetSetting(FormID, "dark_mode");
-                    dark_mode.BooleanValue = setting.IsChecked ?? false;
-                    settingsService.SaveSettings(dark_mode);
-                    restartResult = MessageBox.Show("\"Dark Mode\" requires an app restart to take effect.\n\nRestart now?", "Restart", MessageBoxButton.YesNoCancel, MessageBoxImage.Information);
                     break;
                 case "HighContrastMode":
                     Settings high_contrast = settingsService.GetSetting(FormID, "high_contrast_mode");
